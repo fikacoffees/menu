@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fika Admin V2</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: '#E86A33', primaryDark: '#C55527' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        /* Toggle Switch */
+        .toggle-wrap { position: relative; display: inline-block; width: 3rem; height: 1.5rem; cursor: pointer; }
+        .toggle-checkbox { position: absolute; left: 0; top: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; z-index: 2; }
+        .toggle-label { position: absolute; inset: 0; background-color: #e5e7eb; border-radius: 9999px; transition: background-color 0.25s; }
+        .toggle-label::after {
+            content: ''; position: absolute; top: 2px; left: 2px;
+            width: calc(1.5rem - 4px); height: calc(1.5rem - 4px);
+            background: white; border-radius: 9999px;
+            transition: transform 0.25s, box-shadow 0.25s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .toggle-checkbox:checked + .toggle-label { background-color: #E86A33; }
+        .toggle-checkbox:checked + .toggle-label::after { transform: translateX(1.5rem); }
+
+        /* Sortable drag styles */
+        .sortable-ghost { opacity: 0.3; background: #fff3eb !important; }
+        .sortable-chosen { cursor: grabbing !important; }
+        .sortable-drag { opacity: 0.9; transform: rotate(2deg); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .drag-handle { cursor: grab; touch-action: none; }
+        .drag-handle:active { cursor: grabbing; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 pb-20 md:pb-0">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo, useRef } = React;
+
+        // --- GITHUB API HELPERS ---
+        const getGithubCredentials = () => {
+            return {
+                username: localStorage.getItem('github_username') || '',
+                repo: localStorage.getItem('github_repo') || '',
+                token: localStorage.getItem('github_token') || ''
+            };
+        };
+
+        const fetchMenuFromGithub = async () => {
+            const { username, repo, token } = getGithubCredentials();
+            if (!username || !repo || !token) return { authError: true, error: 'Github bilgileri eksik.' };
+
+            try {
+                const url = `https://api.github.com/repos/${username}/${repo}/contents/data.json`;
+                const res = await fetch(url + '?t=' + new Date().getTime(), {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+
+                if (res.status === 401) return { authError: true, error: 'Token geçersiz veya süresi dolmuş.' };
+                if (res.status === 403) return { authError: true, error: 'Erişim reddedildi. Token "repo" yetkisine sahip olmalı.' };
+                if (res.status === 404) return { authError: true, error: `Repo veya data.json bulunamadı: ${username}/${repo}` };
+                if (!res.ok) return { error: `Github API hatası: ${res.status}` };
+
+                const data = await res.json();
+                let content;
+
+                if (data.content) {
+                    // Küçük dosya (1 MB altı): base64 içerik direkt geliyor
+                    content = decodeURIComponent(escape(atob(data.content)));
+                } else if (data.download_url) {
+                    // Büyük dosya (1 MB üstü): GitHub content alanını boş bırakır, download_url'den çekmek lazım
+                    console.warn('data.json 1 MB üstü, download_url kullanılıyor');
+                    const dlRes = await fetch(data.download_url + '?t=' + new Date().getTime(), {
+                        headers: { 'Authorization': `token ${token}` },
+                        cache: 'no-store'
+                    });
+                    if (!dlRes.ok) return { error: `data.json indirilemedi (HTTP ${dlRes.status}).` };
+                    content = await dlRes.text();
+                } else if (data.size === 0) {
+                    return { error: 'data.json boş bir dosya. Yedekten yükleyin.' };
+                } else {
+                    return { error: 'data.json içeriği okunamadı (beklenmedik API yanıtı).' };
+                }
+
+                return { menuData: JSON.parse(content), sha: data.sha };
+            } catch (err) {
+                console.error('GitHub API fetch failed:', err);
+                return { error: 'Bağlantı hatası: ' + err.message };
+            }
+        };
+
+        // --- IMAGE UPLOAD HELPERS ---
+        const slugify = (text) => {
+            const map = { 'ç':'c','ğ':'g','ı':'i','ö':'o','ş':'s','ü':'u','Ç':'c','Ğ':'g','İ':'i','Ö':'o','Ş':'s','Ü':'u' };
+            return (text || 'urun')
+                .replace(/[çğıöşüÇĞİÖŞÜ]/g, c => map[c] || c)
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-|-$/g, '')
+                .slice(0, 40) || 'urun';
+        };
+
+        // Bir path images/ ile mi başlıyor? (yani repo'da bizim yüklediğimiz dosya mı)
+        const isManagedImagePath = (p) => typeof p === 'string' && p.startsWith('images/');
+
+        // Bu path başka bir üründe de kullanılıyor mu? (data güvenliği)
+        const isPathUsedElsewhere = (menuData, path, excludeCategory, excludeIndex) => {
+            if (!path) return false;
+            for (const cat of Object.keys(menuData)) {
+                if (cat === '_Config' || !Array.isArray(menuData[cat])) continue;
+                for (let i = 0; i < menuData[cat].length; i++) {
+                    if (cat === excludeCategory && i === excludeIndex) continue;
+                    const it = menuData[cat][i];
+                    if (it.img === path || it.imgWide === path) return true;
+                }
+            }
+            return false;
+        };
+
+        const deleteImageFromGithub = async (path) => {
+            const { username, repo, token } = getGithubCredentials();
+            if (!username || !repo || !token) return false;
+            if (!isManagedImagePath(path)) return false; // sadece images/ altındakileri sil
+
+            try {
+                // Önce dosyanın sha'sını al
+                const getRes = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}?t=${Date.now()}`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                if (!getRes.ok) return false; // zaten yok veya erişilemez
+                const fileData = await getRes.json();
+                if (!fileData.sha) return false;
+
+                const delRes = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: `Admin: Görsel silindi (${path})`,
+                        sha: fileData.sha
+                    })
+                });
+                return delRes.ok;
+            } catch (e) {
+                console.warn('Görsel silinemedi:', path, e);
+                return false;
+            }
+        };
+
+        const uploadImageToGithub = async (base64DataUrl, filename) => {
+            const { username, repo, token } = getGithubCredentials();
+            if (!username || !repo || !token) throw new Error('Github bilgileri eksik');
+
+            const base64Content = base64DataUrl.replace(/^data:image\/\w+;base64,/, '');
+            const path = `images/${filename}`;
+
+            const res = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+                method: 'PUT',
+                headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: `Admin: Görsel yüklendi (${filename})`,
+                    content: base64Content
+                })
+            });
+
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(err.message || `Görsel yüklenemedi: HTTP ${res.status}`);
+            }
+            return path; // relative path: images/foo.jpg
+        };
+
+        const saveMenuToGithub = async (newData, fileSha) => {
+            const { username, repo, token } = getGithubCredentials();
+            if (!username || !repo || !token) throw new Error("Eksik bilgi");
+
+            const content = btoa(unescape(encodeURIComponent(JSON.stringify(newData, null, 2))));
+            
+            const res = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/data.json`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: `Admin Panel: Menü güncellendi`,
+                    content: content,
+                    sha: fileSha
+                })
+            });
+
+            if (!res.ok) {
+                const err = await res.json().catch(()=>({}));
+                throw new Error(err.message || 'Kayıt başarısız oldu');
+            }
+            const result = await res.json();
+            return result.content.sha;
+        };
+
+        // --- COMPONENTS ---
+
+        const IconPicker = ({ value, onChange }) => {
+            useEffect(() => { lucide.createIcons(); });
+            const icons = ['coffee', 'snowflake', 'cake-slice', 'dices', 'pizza', 'sandwich', 'croissant', 'cup-soda', 'martini', 'star', 'heart', 'flame'];
+            return (
+                <div className="flex gap-2 flex-wrap">
+                    {icons.map(icon => (
+                        <button key={icon} type="button" onClick={() => onChange(icon)} className={`p-3 rounded-xl border ${value === icon ? 'border-primary bg-primary/10 text-primary' : 'border-gray-200 text-gray-500 hover:bg-gray-100'} flex items-center justify-center transition-colors`}>
+                            <i data-lucide={icon} className="w-5 h-5"></i>
+                        </button>
+                    ))}
+                </div>
+            );
+        };
+
+        const Toggle = ({ label, checked, onChange }) => (
+            <label className={`flex items-center bg-gray-50 p-3 rounded-lg border border-gray-200 cursor-pointer select-none ${label ? 'justify-between' : 'justify-center'}`}>
+                {label && <span className="text-sm font-semibold text-gray-700">{label}</span>}
+                <span className="toggle-wrap">
+                    <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="toggle-checkbox" />
+                    <span className="toggle-label"></span>
+                </span>
+            </label>
+        );
+
+        // --- MAIN APP ---
+
+        const App = () => {
+            const creds = getGithubCredentials();
+            const [isLoggedIn, setIsLoggedIn] = useState(!!(creds.username && creds.repo && creds.token));
+            const [menuData, setMenuData] = useState(null);
+            const [fileSha, setFileSha] = useState(null);
+            const [isLoading, setIsLoading] = useState(false);
+            const [loadError, setLoadError] = useState(null);
+            
+            const [activeView, setActiveView] = useState('products'); // products, daily, slot, settings
+            
+            useEffect(() => {
+                if (isLoggedIn) {
+                    loadData();
+                }
+            }, [isLoggedIn]);
+
+            useEffect(() => {
+                lucide.createIcons();
+            });
+
+            const loadData = async () => {
+                setIsLoading(true);
+                setLoadError(null);
+                const result = await fetchMenuFromGithub();
+
+                // Token/yetki sorunu varsa kullanıcıyı doğrudan login'e at
+                if (result && result.authError) {
+                    localStorage.removeItem('github_token');
+                    alert('Bağlantı kuruldu ama yetki sorunu var:\n\n' + result.error + '\n\nLütfen tekrar giriş yapın (yeni token ile).');
+                    setIsLoading(false);
+                    setIsLoggedIn(false);
+                    return;
+                }
+                if (result && result.error) {
+                    setLoadError(result.error);
+                    setIsLoading(false);
+                    return;
+                }
+                if (result && result.menuData) {
+                    if (!result.menuData._Config) {
+                        result.menuData._Config = { dailySuggestion: {}, slotConfig: [] };
+                    }
+                    if (!result.menuData._Config.slotConfig) {
+                        result.menuData._Config.slotConfig = [];
+                    }
+                    setMenuData(result.menuData);
+                    setFileSha(result.sha);
+                }
+                setIsLoading(false);
+            };
+
+            const handleSaveData = async (newData) => {
+                if (!fileSha) {
+                    alert("Kaydedilemiyor: Salt-okunur moddasınız.\n\nGithub API'ye bağlanılamadığı için veri yerel dosyadan yüklendi. Bu nedenle değişiklikler GitHub'a yazılamaz.\n\nÇözüm: Ayarlar > Bağlantı kısmından Github Token'ınızı güncelleyin (büyük ihtimalle süresi dolmuş). Yeni token oluşturmak için: GitHub > Settings > Developer settings > Personal access tokens.");
+                    return false;
+                }
+                setIsLoading(true);
+                try {
+                    const newSha = await saveMenuToGithub(newData, fileSha);
+                    setMenuData(newData);
+                    setFileSha(newSha);
+                    return true;
+                } catch (e) {
+                    console.error("Save Error:", e);
+                    let msg = e.message || 'Bilinmeyen hata';
+                    if (msg.includes('401') || msg.toLowerCase().includes('bad credentials')) {
+                        msg = 'Github Token geçersiz veya süresi dolmuş. Ayarlar > Bağlantı kısmından güncelleyin.';
+                    } else if (msg.includes('409') || msg.toLowerCase().includes('sha')) {
+                        msg = 'Dosya başka bir yerden değiştirilmiş olabilir. Sayfayı yenileyip tekrar deneyin.';
+                    }
+                    alert(`Kayıt başarısız oldu: ${msg}`);
+                    return false;
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            if (!isLoggedIn) {
+                return <LoginScreen onLogin={() => setIsLoggedIn(true)} />;
+            }
+
+            if (!menuData) {
+                return (
+                    <div className="min-h-screen flex items-center justify-center p-6">
+                        {loadError ? (
+                            <div className="max-w-md bg-white rounded-2xl shadow-lg border border-red-200 p-6 text-center">
+                                <div className="w-14 h-14 mx-auto mb-4 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
+                                    <i data-lucide="alert-triangle" className="w-7 h-7"></i>
+                                </div>
+                                <h2 className="text-xl font-bold text-gray-800 mb-2">Veri Yüklenemedi</h2>
+                                <p className="text-sm text-gray-600 mb-5">{loadError}</p>
+                                <div className="flex gap-2">
+                                    <button onClick={loadData} className="flex-1 py-3 rounded-xl bg-primary text-white font-bold hover:bg-orange-600 transition-colors">Yeniden Dene</button>
+                                    <button onClick={() => { localStorage.clear(); window.location.reload(); }} className="flex-1 py-3 rounded-xl bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition-colors">Çıkış Yap</button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="flex flex-col items-center gap-3">
+                                <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                                <p className="text-gray-600">Yükleniyor...</p>
+                            </div>
+                        )}
+                    </div>
+                );
+            }
+
+            return (
+                <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row md:pl-64">
+                    {/* Sidebar / Bottom Nav */}
+                    <nav className="fixed bottom-0 w-full bg-white border-t border-gray-200 md:border-t-0 md:border-r md:w-64 md:top-0 md:h-screen md:flex md:flex-col z-50">
+                        <div className="hidden md:block p-6">
+                            <h1 className="text-2xl font-bold text-primary">Fika Admin</h1>
+                            <p className="text-xs text-gray-500">Yönetim Paneli V2</p>
+                        </div>
+                        <div className="flex md:flex-col justify-around md:justify-start w-full md:flex-1 p-2 md:p-4 gap-2">
+                            <NavButton icon="layout-grid" label="Menü" active={activeView === 'products'} onClick={() => setActiveView('products')} />
+                            <NavButton icon="sparkles" label="Günün İkilisi" active={activeView === 'daily'} onClick={() => setActiveView('daily')} />
+                            <NavButton icon="dices" label="Slot Makinesi" active={activeView === 'slot'} onClick={() => setActiveView('slot')} />
+                            <NavButton icon="settings" label="Ayarlar" active={activeView === 'settings'} onClick={() => setActiveView('settings')} />
+                        </div>
+                    </nav>
+
+                    {/* Main Content Area */}
+                    <main className="flex-1 p-4 md:p-8 w-full max-w-5xl mx-auto">
+                        {isLoading && (
+                            <div className="fixed inset-0 z-[100] bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center">
+                                <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                                <p className="mt-4 font-bold text-gray-700">Senkronize Ediliyor...</p>
+                            </div>
+                        )}
+
+                        {activeView === 'products' && <ProductsView menuData={menuData} onSave={handleSaveData} />}
+                        {activeView === 'daily' && <DailyView menuData={menuData} onSave={handleSaveData} />}
+                        {activeView === 'slot' && <SlotView menuData={menuData} onSave={handleSaveData} />}
+                        {activeView === 'settings' && <SettingsView />}
+                    </main>
+                </div>
+            );
+        };
+
+        const NavButton = ({ icon, label, active, onClick }) => (
+            <button 
+                onClick={onClick}
+                className={`flex flex-col md:flex-row items-center md:justify-start gap-1 md:gap-3 p-3 rounded-xl w-full transition-colors ${active ? 'text-primary bg-primary/10 font-bold' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-800'}`}
+            >
+                <i data-lucide={icon} className="w-6 h-6 md:w-5 md:h-5"></i>
+                <span className="text-[10px] md:text-sm">{label}</span>
+            </button>
+        );
+
+        // --- VIEWS ---
+
+        const ProductsView = ({ menuData, onSave }) => {
+            const categories = Object.keys(menuData).filter(c => c !== '_Config');
+            const [activeCat, setActiveCat] = useState(categories[0] || '');
+            const [isEditingItem, setIsEditingItem] = useState(null); // null veya { index: number, isNew: boolean, item: object }
+            const [isEditingCategory, setIsEditingCategory] = useState(false);
+            const [cropImageSrc, setCropImageSrc] = useState(null);
+            const [liveCropData, setLiveCropData] = useState(null);
+            const [cropStep, setCropStep] = useState('square'); // 'square' | 'wide'
+            const [tempSquareImg, setTempSquareImg] = useState(null);
+            const [isUploadingImg, setIsUploadingImg] = useState(false);
+            const cropperInstance = useRef(null);
+
+            useEffect(() => {
+                if (!cropImageSrc && cropperInstance.current) {
+                    cropperInstance.current.destroy();
+                    cropperInstance.current = null;
+                }
+            }, [cropImageSrc]);
+
+            useEffect(() => { lucide.createIcons(); });
+
+            useEffect(() => {
+                if (!categories.includes(activeCat) && categories.length > 0) {
+                    setActiveCat(categories[0]);
+                }
+            }, [menuData]);
+
+            const handleSaveItem = async (e, oldItemIndex, isNew) => {
+                e.preventDefault();
+                const form = e.target;
+
+                let imgData = form.imgPreview.value || form.imgUrl.value;
+                if (!imgData) { alert("Lütfen bir görsel ekleyin"); return; }
+                let imgWideData = form.imgWidePreview.value || (form.imgUrl.value || imgData);
+
+                // ★ Base64 görselleri images/ klasörüne yükle, path al
+                try {
+                    const slug = slugify(form.name.value);
+                    const ts = Date.now();
+                    if (imgData.startsWith('data:')) {
+                        setIsUploadingImg(true);
+                        imgData = await uploadImageToGithub(imgData, `${slug}-${ts}-square.jpg`);
+                    }
+                    if (imgWideData.startsWith('data:')) {
+                        setIsUploadingImg(true);
+                        // wide aynı item için, küçük bir delay ile farklı ts
+                        imgWideData = await uploadImageToGithub(imgWideData, `${slug}-${ts}-wide.jpg`);
+                    }
+                } catch (uploadErr) {
+                    setIsUploadingImg(false);
+                    alert('Görsel yüklenemedi: ' + uploadErr.message);
+                    return;
+                }
+                setIsUploadingImg(false);
+
+                const targetCat = form.category.value;
+
+                const newItem = {
+                    name: form.name.value,
+                    price: form.price.value.replace('₺', '') + '₺',
+                    desc: form.desc.value,
+                    img: imgData,
+                    imgWide: imgWideData,
+                    tags: form.tags.value.split(',').map(t => t.trim()).filter(t => t),
+                    isActive: form.isActive.checked
+                };
+
+                // Eski item'ın foto path'lerini al — değişmişse silinecekler
+                const oldItem = (!isNew && isEditingItem.category && menuData[isEditingItem.category])
+                    ? menuData[isEditingItem.category][oldItemIndex]
+                    : null;
+                const oldImg = oldItem?.img;
+                const oldImgWide = oldItem?.imgWide;
+
+                const newData = { ...menuData };
+                const oldCat = isEditingItem.category;
+
+                if (!isNew && oldCat !== targetCat) {
+                    newData[oldCat].splice(oldItemIndex, 1);
+                    newData[targetCat] = [newItem, ...(newData[targetCat] || [])];
+                } else if (!isNew && oldCat === targetCat) {
+                    newData[targetCat][oldItemIndex] = newItem;
+                } else if (isNew) {
+                    newData[targetCat] = [newItem, ...(newData[targetCat] || [])];
+                }
+
+                if (await onSave(newData)) {
+                    // Foto değiştiyse eski dosyaları sil (başka yerde kullanılmıyorsa)
+                    if (oldImg && oldImg !== newItem.img && isManagedImagePath(oldImg)) {
+                        if (!isPathUsedElsewhere(newData, oldImg, null, null)) {
+                            deleteImageFromGithub(oldImg);
+                        }
+                    }
+                    if (oldImgWide && oldImgWide !== newItem.imgWide && isManagedImagePath(oldImgWide)) {
+                        if (!isPathUsedElsewhere(newData, oldImgWide, null, null)) {
+                            deleteImageFromGithub(oldImgWide);
+                        }
+                    }
+
+                    setIsEditingItem(null);
+                    if (activeCat !== targetCat) setActiveCat(targetCat);
+                }
+            };
+
+            const handleReorder = (fromIdx, toIdx) => {
+                if (fromIdx === toIdx) return;
+                const items = [...(menuData[activeCat] || [])];
+                if (fromIdx < 0 || fromIdx >= items.length || toIdx < 0 || toIdx >= items.length) return;
+                const [moved] = items.splice(fromIdx, 1);
+                items.splice(toIdx, 0, moved);
+                const newData = { ...menuData, [activeCat]: items };
+                onSave(newData);
+            };
+
+            const moveItem = (idx, direction) => {
+                handleReorder(idx, idx + direction);
+            };
+
+            // SortableJS: drag&drop kurulumu
+            const gridRef = useRef(null);
+            const sortableInstance = useRef(null);
+
+            useEffect(() => {
+                if (!gridRef.current || !window.Sortable) return;
+                if (sortableInstance.current) {
+                    sortableInstance.current.destroy();
+                }
+                sortableInstance.current = window.Sortable.create(gridRef.current, {
+                    animation: 200,
+                    handle: '.drag-handle',
+                    ghostClass: 'sortable-ghost',
+                    chosenClass: 'sortable-chosen',
+                    dragClass: 'sortable-drag',
+                    onEnd: (evt) => {
+                        if (evt.oldIndex !== evt.newIndex) {
+                            handleReorder(evt.oldIndex, evt.newIndex);
+                        }
+                    }
+                });
+                return () => {
+                    if (sortableInstance.current) {
+                        sortableInstance.current.destroy();
+                        sortableInstance.current = null;
+                    }
+                };
+            }, [activeCat, menuData]);
+
+            const handleDeleteItem = async (idx) => {
+                if(!confirm('Ürünü silmek istediğinize emin misiniz?')) return;
+                const deletedItem = menuData[activeCat][idx];
+                const newData = { ...menuData };
+                newData[activeCat] = [...newData[activeCat]];
+                newData[activeCat].splice(idx, 1);
+
+                // Ürünün fotoğraflarını images/ klasöründen sil (başka üründe kullanılmıyorsa)
+                const pathsToCheck = [deletedItem.img, deletedItem.imgWide].filter(isManagedImagePath);
+                for (const p of pathsToCheck) {
+                    if (!isPathUsedElsewhere(newData, p, null, null)) {
+                        await deleteImageFromGithub(p);
+                    }
+                }
+
+                onSave(newData);
+            };
+
+            const handleToggleActive = async (idx, currentStatus) => {
+                const newData = { ...menuData };
+                newData[activeCat][idx].isActive = currentStatus === false ? true : false;
+                onSave(newData);
+            };
+
+            const handleAddCategory = async () => {
+                const name = prompt('Yeni kategori adı:');
+                if(!name || menuData[name]) return;
+                const newData = { ...menuData, [name]: [] };
+                if (await onSave(newData)) setActiveCat(name);
+            };
+
+            const handleRenameCategory = async () => {
+                const newName = prompt('Kategori için yeni ad:', activeCat);
+                if (!newName || newName === activeCat || menuData[newName]) return;
+                const newData = { ...menuData };
+                newData[newName] = newData[activeCat];
+                delete newData[activeCat];
+                
+                // Update Slot configs using this category
+                if(newData._Config.slotConfig) {
+                    newData._Config.slotConfig.forEach(slot => {
+                        const idx = slot.targetCategories.indexOf(activeCat);
+                        if(idx > -1) slot.targetCategories[idx] = newName;
+                    });
+                }
+
+                if (await onSave(newData)) setActiveCat(newName);
+            };
+
+            const handleDeleteCategory = async () => {
+                if(!confirm(`'${activeCat}' kategorisini ve içindeki TÜM ürünleri silmek istediğinize emin misiniz?`)) return;
+                const newData = { ...menuData };
+                delete newData[activeCat];
+                
+                // Remove from slot configs
+                if(newData._Config.slotConfig) {
+                    newData._Config.slotConfig.forEach(slot => {
+                        slot.targetCategories = slot.targetCategories.filter(c => c !== activeCat);
+                    });
+                }
+
+                onSave(newData);
+            };
+
+            const handleImageUpload = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    setCropStep('square');
+                    setTempSquareImg(null);
+                    setCropImageSrc(ev.target.result);
+                };
+                reader.readAsDataURL(file);
+                e.target.value = '';
+            };
+
+            const destroyCropper = () => {
+                if(cropperInstance.current) {
+                    cropperInstance.current.destroy();
+                    cropperInstance.current = null;
+                }
+            };
+
+            const handleNextCrop = () => {
+                if(!cropperInstance.current) return;
+                const canvas = cropperInstance.current.getCroppedCanvas({
+                    maxWidth: 800,
+                    maxHeight: 800,
+                    fillColor: '#fff',
+                    imageSmoothingEnabled: true,
+                    imageSmoothingQuality: 'high',
+                });
+                setTempSquareImg(canvas.toDataURL('image/jpeg', 0.85));
+                destroyCropper();
+                setLiveCropData(null);
+                setCropStep('wide');
+            };
+
+            const handleBackToSquare = () => {
+                destroyCropper();
+                setLiveCropData(null);
+                setCropStep('square');
+            };
+
+            const handleFinalCrop = () => {
+                if(!cropperInstance.current || !tempSquareImg) return;
+                const canvas = cropperInstance.current.getCroppedCanvas({
+                    maxWidth: 1280,
+                    maxHeight: 720,
+                    fillColor: '#fff',
+                    imageSmoothingEnabled: true,
+                    imageSmoothingQuality: 'high',
+                });
+                const wideData = canvas.toDataURL('image/jpeg', 0.85);
+                setIsEditingItem(prev => ({
+                    ...prev,
+                    item: { ...prev.item, img: tempSquareImg, imgWide: wideData }
+                }));
+                destroyCropper();
+                setCropImageSrc(null);
+                setTempSquareImg(null);
+                setLiveCropData(null);
+                setCropStep('square');
+            };
+
+            const handleCancelCrop = () => {
+                destroyCropper();
+                setCropImageSrc(null);
+                setTempSquareImg(null);
+                setLiveCropData(null);
+                setCropStep('square');
+            };
+
+            if (isEditingItem) {
+                const { item, isNew, index } = isEditingItem;
+                return (
+                    <>
+                        {cropImageSrc && (
+                            <div className="fixed inset-0 z-[200] bg-black/90 p-4 overflow-y-auto flex flex-col items-center justify-start md:justify-center">
+                                <div className="bg-white rounded-2xl w-full max-w-4xl p-6 flex flex-col md:flex-row gap-6 shadow-2xl my-auto">
+                                    <div className="flex-1 flex flex-col gap-4">
+                                        <div className="flex items-center gap-2 text-sm">
+                                            <span className={`flex items-center gap-2 px-3 py-1.5 rounded-full font-bold ${cropStep === 'square' ? 'bg-primary text-white' : 'bg-green-100 text-green-700'}`}>
+                                                <span className="w-5 h-5 rounded-full bg-white/30 flex items-center justify-center text-xs">{cropStep === 'square' ? '1' : '✓'}</span>
+                                                Adım 1: Kare (Menü)
+                                            </span>
+                                            <div className="flex-1 h-0.5 bg-gray-200"></div>
+                                            <span className={`flex items-center gap-2 px-3 py-1.5 rounded-full font-bold ${cropStep === 'wide' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-500'}`}>
+                                                <span className="w-5 h-5 rounded-full bg-white/30 flex items-center justify-center text-xs">2</span>
+                                                Adım 2: Geniş (Detay)
+                                            </span>
+                                        </div>
+                                        <div className="flex-1 min-h-[250px] md:min-h-[400px] bg-gray-100 rounded-xl overflow-hidden flex items-center justify-center relative">
+                                            <img
+                                                key={cropStep}
+                                                src={cropImageSrc}
+                                                style={{maxWidth: '100%', maxHeight: '500px'}}
+                                                onLoad={(e) => {
+                                                if(cropperInstance.current) cropperInstance.current.destroy();
+                                                const isSquare = cropStep === 'square';
+                                                cropperInstance.current = new window.Cropper(e.target, {
+                                                    aspectRatio: isSquare ? 1 : 16/9,
+                                                    viewMode: 1,
+                                                    dragMode: 'move',
+                                                    zoomable: true,
+                                                    toggleDragModeOnDblclick: false,
+                                                    autoCropArea: 1,
+                                                    crop: () => {
+                                                        const c = cropperInstance.current.getCroppedCanvas(isSquare ? { width: 300, height: 300 } : { width: 400, height: 225 });
+                                                        if(c) setLiveCropData(c.toDataURL('image/jpeg', 0.5));
+                                                    }
+                                                });
+                                            }}
+                                            />
+                                        </div>
+                                        <div className="flex justify-center gap-3">
+                                            <button type="button" onClick={() => cropperInstance.current?.zoom(0.1)} className="p-3 bg-white rounded-xl shadow-sm border border-gray-200 hover:bg-gray-50 flex flex-col items-center gap-1 text-gray-600"><i data-lucide="zoom-in" className="w-5 h-5"></i><span className="text-[10px] font-bold">Yakınlaştır</span></button>
+                                            <button type="button" onClick={() => cropperInstance.current?.zoom(-0.1)} className="p-3 bg-white rounded-xl shadow-sm border border-gray-200 hover:bg-gray-50 flex flex-col items-center gap-1 text-gray-600"><i data-lucide="zoom-out" className="w-5 h-5"></i><span className="text-[10px] font-bold">Uzaklaştır</span></button>
+                                            <button type="button" onClick={() => cropperInstance.current?.rotate(90)} className="p-3 bg-white rounded-xl shadow-sm border border-gray-200 hover:bg-gray-50 flex flex-col items-center gap-1 text-gray-600"><i data-lucide="rotate-cw" className="w-5 h-5"></i><span className="text-[10px] font-bold">Döndür</span></button>
+                                            <button type="button" onClick={() => cropperInstance.current?.reset()} className="p-3 bg-white rounded-xl shadow-sm border border-gray-200 hover:bg-gray-50 flex flex-col items-center gap-1 text-gray-600"><i data-lucide="rotate-ccw" className="w-5 h-5"></i><span className="text-[10px] font-bold">Sıfırla</span></button>
+                                        </div>
+                                    </div>
+                                    <div className="w-full md:w-64 flex flex-col gap-4 shrink-0">
+                                        <h3 className="font-bold text-gray-800 border-b pb-2">
+                                            {cropStep === 'square' ? 'Menü Kart Önizlemesi' : 'Detay Görsel Önizlemesi'}
+                                        </h3>
+                                        {cropStep === 'square' ? (
+                                            <div>
+                                                <p className="text-xs text-gray-500 mb-2 font-semibold">Menü Listesi (1:1)</p>
+                                                <div className="w-24 h-24 rounded-lg overflow-hidden bg-gray-100 shadow-sm border border-gray-200">
+                                                    <img src={liveCropData} className="w-full h-full object-cover" />
+                                                </div>
+                                                <p className="text-[11px] text-gray-400 mt-3 leading-snug">Bu, menü listesinde görünecek küçük kare görsel. İleri'ye basıp detay sayfası için geniş kırpmaya geçebilirsin.</p>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <div>
+                                                    <p className="text-xs text-gray-500 mb-2 font-semibold">Detay Sayfası (16:9)</p>
+                                                    <div className="w-full aspect-video rounded-lg overflow-hidden bg-gray-100 shadow-sm border border-gray-200 relative">
+                                                        <img src={liveCropData} className="w-full h-full object-cover" />
+                                                    </div>
+                                                </div>
+                                                {tempSquareImg && (
+                                                    <div>
+                                                        <p className="text-xs text-gray-500 mb-2 font-semibold">Kaydedilen Kare</p>
+                                                        <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 shadow-sm border-2 border-green-300">
+                                                            <img src={tempSquareImg} className="w-full h-full object-cover" />
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </>
+                                        )}
+                                        <div className="mt-auto pt-4 flex flex-col gap-2">
+                                            {cropStep === 'square' ? (
+                                                <div className="flex gap-2">
+                                                    <button type="button" onClick={handleCancelCrop} className="w-1/2 py-3 rounded-xl bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition-colors">İptal</button>
+                                                    <button type="button" onClick={handleNextCrop} className="w-1/2 py-3 rounded-xl bg-primary text-white font-bold hover:bg-orange-600 transition-colors shadow-md flex items-center justify-center gap-1">İleri <i data-lucide="arrow-right" className="w-4 h-4"></i></button>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <button type="button" onClick={handleFinalCrop} className="w-full py-3 rounded-xl bg-primary text-white font-bold hover:bg-orange-600 transition-colors shadow-md">Kaydet</button>
+                                                    <div className="flex gap-2">
+                                                        <button type="button" onClick={handleBackToSquare} className="w-1/2 py-2.5 rounded-xl bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-colors text-sm flex items-center justify-center gap-1"><i data-lucide="arrow-left" className="w-4 h-4"></i> Geri</button>
+                                                        <button type="button" onClick={handleCancelCrop} className="w-1/2 py-2.5 rounded-xl bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-colors text-sm">İptal</button>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6 animate-[fadeIn_0.3s_ease-out]">
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-xl md:text-2xl font-bold">{isNew ? 'Yeni Ürün Ekle' : 'Ürünü Düzenle'}</h2>
+                            <button onClick={() => setIsEditingItem(null)} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full"><i data-lucide="x"></i></button>
+                        </div>
+                        <form onSubmit={(e) => handleSaveItem(e, index, isNew)} className="space-y-5">
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Ürün Adı</label>
+                                <input name="name" required defaultValue={item.name} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none" />
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">Kategori</label>
+                                    <select name="category" defaultValue={isEditingItem.category} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none">
+                                        {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">Fiyat (Örn: 120)</label>
+                                    <div className="relative">
+                                        <input name="price" required defaultValue={item.price ? item.price.replace('₺', '') : ''} className="w-full pl-4 pr-8 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none" />
+                                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">₺</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Görsel (Dosya Seç veya URL)</label>
+                                <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
+                                    <div className="w-24 h-24 rounded-xl border-2 border-dashed border-gray-300 overflow-hidden shrink-0 bg-gray-50 flex items-center justify-center relative">
+                                        <img id="imgPreviewTag" src={item.img} onError={(e)=>e.target.style.display='none'} onLoad={(e)=>e.target.style.display='block'} className="w-full h-full object-cover" />
+                                        <i data-lucide="image" className="absolute text-gray-400 w-8 h-8 -z-10"></i>
+                                    </div>
+                                    <div className="flex-1 space-y-2">
+                                        <input type="file" accept="image/*" onChange={handleImageUpload} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 cursor-pointer" />
+                                        <input name="imgPreview" type="hidden" value={item.img || ''} readOnly />
+                                        <input name="imgWidePreview" type="hidden" value={item.imgWide || ''} readOnly />
+                                        <input name="imgUrl" type="url" placeholder="Veya internetten resim URL'si yapıştır" defaultValue={item.img?.startsWith('http') ? item.img : ''} onChange={(e) => { setIsEditingItem(prev => ({...prev, item: {...prev.item, img: e.target.value, imgWide: e.target.value}})); }} className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary outline-none" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Açıklama</label>
+                                <textarea name="desc" rows="3" defaultValue={item.desc} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none resize-none"></textarea>
+                            </div>
+                            
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Etiketler (Virgülle ayırın: Vegan, Yeni)</label>
+                                <input name="tags" defaultValue={(item.tags||[]).join(', ')} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none" />
+                            </div>
+
+                            <Toggle label="Ürün Aktif (Menüde Göster)" checked={item.isActive !== false} onChange={(val) => { setIsEditingItem(prev => ({...prev, item: {...prev.item, isActive: val}})); }} />
+                            <input type="checkbox" name="isActive" checked={item.isActive !== false} readOnly className="hidden" />
+
+                            <div className="flex gap-4 mt-6">
+                                <button type="button" disabled={isUploadingImg} onClick={() => setIsEditingItem(null)} className="w-1/3 bg-gray-200 text-gray-700 font-bold py-4 rounded-xl hover:bg-gray-300 transition-colors disabled:opacity-50">İptal</button>
+                                <button type="submit" disabled={isUploadingImg} className="w-2/3 bg-primary text-white font-bold py-4 rounded-xl hover:bg-orange-600 transition-colors shadow-md shadow-primary/30 disabled:opacity-60 flex items-center justify-center gap-2">
+                                    {isUploadingImg ? (
+                                        <>
+                                            <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                                            Görsel Yükleniyor...
+                                        </>
+                                    ) : 'Kaydet'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    </>
+                );
+            }
+
+            return (
+                <div className="flex flex-col h-full animate-[fadeIn_0.3s_ease-out]">
+                    <div className="flex items-center justify-between mb-4 md:mb-6">
+                        <h2 className="text-2xl font-bold">Kategoriler</h2>
+                        <button onClick={handleAddCategory} className="text-sm font-bold text-primary bg-primary/10 px-4 py-2 rounded-lg hover:bg-primary/20 flex items-center gap-2">
+                            <i data-lucide="plus" className="w-4 h-4"></i> Kategori Ekle
+                        </button>
+                    </div>
+
+                    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 mb-4 border-b border-gray-200 snap-x">
+                        {categories.map(cat => (
+                            <button 
+                                key={cat} 
+                                onClick={() => setActiveCat(cat)}
+                                className={`snap-start shrink-0 px-5 py-2.5 rounded-t-lg font-semibold text-sm transition-colors border-b-2 ${activeCat === cat ? 'border-primary text-primary bg-primary/5' : 'border-transparent text-gray-500 hover:text-gray-800 hover:bg-gray-50'}`}
+                            >
+                                {cat}
+                            </button>
+                        ))}
+                    </div>
+
+                    {activeCat && (
+                        <div className="flex-1 bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6 min-h-[50vh]">
+                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                                <div className="flex items-center gap-2">
+                                    <h3 className="text-xl font-bold">{activeCat}</h3>
+                                    <div className="flex gap-1 ml-2">
+                                        <button onClick={handleRenameCategory} className="p-1.5 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg"><i data-lucide="edit-3" className="w-4 h-4"></i></button>
+                                        <button onClick={handleDeleteCategory} className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg"><i data-lucide="trash-2" className="w-4 h-4"></i></button>
+                                    </div>
+                                </div>
+                                <button onClick={() => setIsEditingItem({ isNew: true, item: { name: '', price: '', desc: '', img: '', tags: [], isActive: true }, category: activeCat })} className="w-full md:w-auto bg-gray-900 text-white px-5 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-gray-800 transition-colors shadow-sm">
+                                    <i data-lucide="plus" className="w-4 h-4"></i> Ürün Ekle
+                                </button>
+                            </div>
+
+                            {(menuData[activeCat] || []).length > 1 && (
+                                <p className="text-xs text-gray-500 mb-3 flex items-center gap-1.5">
+                                    <i data-lucide="info" className="w-3.5 h-3.5"></i>
+                                    Sıralamak için: sol kenardaki <i data-lucide="grip-vertical" className="w-3.5 h-3.5 inline"></i> ikonundan sürükle, ya da ↑↓ butonlarını kullan.
+                                </p>
+                            )}
+                            <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {(menuData[activeCat] || []).map((item, idx) => {
+                                    const items = menuData[activeCat] || [];
+                                    const isFirst = idx === 0;
+                                    const isLast = idx === items.length - 1;
+                                    return (
+                                    <div key={`${activeCat}-${idx}-${item.name}`} data-idx={idx} className={`flex bg-gray-50 rounded-xl border p-3 gap-2 ${item.isActive === false ? 'opacity-60 grayscale-[50%] border-gray-200' : 'border-gray-200 hover:border-primary/50'}`}>
+                                        <div className="drag-handle flex items-center text-gray-300 hover:text-gray-500 transition-colors -ml-1" title="Sürükle">
+                                            <i data-lucide="grip-vertical" className="w-4 h-4"></i>
+                                        </div>
+                                        <div className="w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-gray-200">
+                                            <img src={item.img} className="w-full h-full object-cover" />
+                                        </div>
+                                        <div className="flex-1 flex flex-col justify-between overflow-hidden">
+                                            <div>
+                                                <div className="flex justify-between items-start">
+                                                    <h4 className="font-bold text-gray-800 truncate">{item.name}</h4>
+                                                    {item.isActive === false && <span className="bg-red-100 text-red-600 text-[10px] px-2 py-0.5 rounded font-bold shrink-0 ml-2">Pasif</span>}
+                                                </div>
+                                                <span className="text-sm font-semibold text-primary">{item.price}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center gap-1 mt-2">
+                                                <div className="flex gap-1">
+                                                    <button onClick={() => moveItem(idx, -1)} disabled={isFirst} title="Yukarı taşı" className="p-1.5 bg-white text-gray-500 hover:text-primary hover:bg-orange-50 rounded-lg shadow-sm border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed">
+                                                        <i data-lucide="arrow-up" className="w-3.5 h-3.5"></i>
+                                                    </button>
+                                                    <button onClick={() => moveItem(idx, 1)} disabled={isLast} title="Aşağı taşı" className="p-1.5 bg-white text-gray-500 hover:text-primary hover:bg-orange-50 rounded-lg shadow-sm border border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed">
+                                                        <i data-lucide="arrow-down" className="w-3.5 h-3.5"></i>
+                                                    </button>
+                                                </div>
+                                                <div className="flex gap-1">
+                                                    <button onClick={() => handleToggleActive(idx, item.isActive)} title={item.isActive !== false ? "Ürünü Gizle (Stokta Yok)" : "Ürünü Göster"} className={`p-2 bg-white rounded-lg shadow-sm border border-gray-200 ${item.isActive !== false ? 'text-green-600 hover:bg-green-50' : 'text-gray-400 hover:bg-gray-100'}`}>
+                                                        <i data-lucide={item.isActive !== false ? "eye" : "eye-off"} className="w-4 h-4"></i>
+                                                    </button>
+                                                    <button onClick={() => setIsEditingItem({ isNew: false, index: idx, item, category: activeCat })} className="p-2 bg-white text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg shadow-sm border border-gray-200"><i data-lucide="edit-2" className="w-4 h-4"></i></button>
+                                                    <button onClick={() => handleDeleteItem(idx)} className="p-2 bg-white text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg shadow-sm border border-gray-200"><i data-lucide="trash-2" className="w-4 h-4"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    );
+                                })}
+                            </div>
+                            {(!menuData[activeCat] || menuData[activeCat].length === 0) && (
+                                <div className="py-12 text-center text-gray-400 border-2 border-dashed border-gray-200 rounded-xl">
+                                    Bu kategoride hiç ürün yok.
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const SearchableSelect = ({ options, value, onChange, placeholder }) => {
+            const [isOpen, setIsOpen] = useState(false);
+            const [search, setSearch] = useState('');
+            const wrapperRef = useRef(null);
+
+            useEffect(() => {
+                const handleClickOutside = (event) => {
+                    if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+                        setIsOpen(false);
+                    }
+                };
+                document.addEventListener("mousedown", handleClickOutside);
+                return () => document.removeEventListener("mousedown", handleClickOutside);
+            }, []);
+
+            const filteredOptions = options.filter(opt => 
+                opt.name.toLowerCase().includes(search.toLowerCase()) || 
+                opt.category.toLowerCase().includes(search.toLowerCase())
+            );
+
+            const grouped = filteredOptions.reduce((acc, curr) => {
+                if(!acc[curr.category]) acc[curr.category] = [];
+                acc[curr.category].push(curr);
+                return acc;
+            }, {});
+
+            const selectedItem = options.find(o => o.name === value);
+
+            return (
+                <div ref={wrapperRef} className="relative">
+                    <div 
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer flex justify-between items-center"
+                    >
+                        <span className="truncate pr-2">{selectedItem ? `${selectedItem.name} (${selectedItem.price})` : placeholder}</span>
+                        <i data-lucide={isOpen ? "chevron-up" : "chevron-down"} className="w-4 h-4 text-gray-400 shrink-0"></i>
+                    </div>
+                    
+                    {isOpen && (
+                        <div className="absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-xl max-h-60 overflow-y-auto">
+                            <div className="sticky top-0 bg-white p-2 border-b border-gray-100 z-10">
+                                <input 
+                                    type="text" 
+                                    placeholder="Ürün veya kategori ara..." 
+                                    value={search}
+                                    onChange={e => setSearch(e.target.value)}
+                                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg outline-none text-sm focus:ring-1 focus:ring-primary"
+                                    autoFocus
+                                />
+                            </div>
+                            {Object.entries(grouped).map(([cat, items]) => (
+                                <div key={cat}>
+                                    <div className="px-3 py-1.5 bg-gray-100 text-[10px] font-bold text-gray-500 uppercase tracking-wider">{cat}</div>
+                                    {items.map(item => (
+                                        <div 
+                                            key={item.name}
+                                            onClick={() => { onChange(item.name); setIsOpen(false); setSearch(''); }}
+                                            className="px-4 py-2.5 hover:bg-primary/5 cursor-pointer flex justify-between items-center text-sm border-b border-gray-50 last:border-0"
+                                        >
+                                            <span className="truncate mr-2 font-medium">{item.name}</span>
+                                            <span className="text-primary font-bold shrink-0">{item.price}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
+                            {filteredOptions.length === 0 && <div className="p-4 text-center text-gray-500 text-sm">Sonuç bulunamadı.</div>}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const DailyView = ({ menuData, onSave }) => {
+            useEffect(() => { lucide.createIcons(); });
+            const allProducts = Object.keys(menuData)
+                .filter(c => c !== '_Config' && c !== 'Extralar')
+                .flatMap(cat => menuData[cat].filter(item => item.isActive !== false).map(item => ({...item, category: cat})));
+            
+            const config = menuData._Config?.dailySuggestion || {};
+            const [drink, setDrink] = useState(config.drinkName || '');
+            const [food, setFood] = useState(config.foodName || '');
+            const [discount, setDiscount] = useState(config.discountAmount || 0);
+            const [isActive, setIsActive] = useState(config.isActive !== false);
+
+            const handleSave = (e) => {
+                e.preventDefault();
+                const newData = { ...menuData };
+                if(!newData._Config) newData._Config = {};
+                newData._Config.dailySuggestion = { drinkName: drink, foodName: food, discountAmount: discount, isActive };
+                onSave(newData);
+            };
+
+            const handleToggleActive = async (val) => {
+                setIsActive(val);
+                const newData = { ...menuData };
+                if(!newData._Config) newData._Config = {};
+                newData._Config.dailySuggestion = { ...config, drinkName: drink, foodName: food, discountAmount: discount, isActive: val };
+                onSave(newData);
+            };
+
+            const selectedDrink = allProducts.find(p => p.name === drink);
+            const selectedFood = allProducts.find(p => p.name === food);
+            const parsePrice = (priceStr) => parseInt((priceStr||'').replace(/\D/g, '')) || 0;
+            const totalPrice = (selectedDrink ? parsePrice(selectedDrink.price) : 0) + (selectedFood ? parsePrice(selectedFood.price) : 0);
+
+            return (
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8 max-w-2xl mx-auto animate-[fadeIn_0.3s_ease-out]">
+                    <div className="flex items-center gap-4 mb-8 pb-6 border-b border-gray-100">
+                        <div className="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-xl flex items-center justify-center shrink-0">
+                            <i data-lucide="sparkles" className="w-6 h-6"></i>
+                        </div>
+                        <div className="flex-1">
+                            <h2 className="text-2xl font-bold">Günün İkilisi</h2>
+                            <p className="text-sm text-gray-500">Müşterilerinize önereceğiniz özel ikili menüyü ayarlayın.</p>
+                        </div>
+                    </div>
+
+                    <div className={`mb-6 p-4 rounded-xl border-2 transition-colors ${isActive ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'}`}>
+                        <div className="flex items-center justify-between gap-4">
+                            <div className="flex-1">
+                                <div className="font-bold text-gray-800 flex items-center gap-2">
+                                    <i data-lucide={isActive ? 'eye' : 'eye-off'} className={`w-4 h-4 ${isActive ? 'text-green-600' : 'text-gray-400'}`}></i>
+                                    {isActive ? 'Menüde Gösteriliyor' : 'Menüde Gizli'}
+                                </div>
+                                <p className="text-xs text-gray-500 mt-1">
+                                    {isActive
+                                        ? 'Günün İkilisi butonu ana sayfada müşterilere görünür.'
+                                        : 'Günün İkilisi butonu ana sayfada gizlenir; ayarlar saklanır.'}
+                                </p>
+                            </div>
+                            <Toggle label="" checked={isActive} onChange={handleToggleActive} />
+                        </div>
+                    </div>
+
+                    <form onSubmit={handleSave} className={`space-y-6 ${!isActive ? 'opacity-60' : ''}`}>
+                        <div className="grid md:grid-cols-2 gap-6 relative z-20">
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Günün İçeceği</label>
+                                <SearchableSelect 
+                                    options={allProducts}
+                                    value={drink}
+                                    onChange={setDrink}
+                                    placeholder="Ürün Seçin"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Günün Yiyeceği / Tatlısı</label>
+                                <SearchableSelect 
+                                    options={allProducts}
+                                    value={food}
+                                    onChange={setFood}
+                                    placeholder="Ürün Seçin"
+                                />
+                            </div>
+                        </div>
+
+                        {totalPrice > 0 && (
+                            <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                                <div className="flex justify-between items-center mb-1">
+                                    <span className="text-sm text-blue-800 font-bold">Toplam Liste Fiyatı:</span>
+                                    <span className="font-bold text-lg text-blue-900">{totalPrice}₺</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-xs text-blue-600 font-semibold">İndirimli Fiyat (Müşterinin Ödeyeceği):</span>
+                                    <span className="font-bold text-md text-green-600">{Math.max(0, totalPrice - discount)}₺</span>
+                                </div>
+                            </div>
+                        )}
+
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-2">İndirim Tutarı (₺)</label>
+                            <input type="number" min="0" value={discount} onChange={e => setDiscount(Number(e.target.value))} required className="w-full md:w-1/3 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none" />
+                        </div>
+
+                        <button type="submit" className="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-orange-600 transition-colors shadow-md mt-4">
+                            Ayarları Kaydet
+                        </button>
+                    </form>
+                </div>
+            );
+        };
+
+        const SlotView = ({ menuData, onSave }) => {
+            useEffect(() => { lucide.createIcons(); });
+            const categories = Object.keys(menuData).filter(c => c !== '_Config');
+            const [tokens, setTokens] = useState(menuData._Config?.slotConfig || []);
+            const [editingToken, setEditingToken] = useState(null);
+
+            const handleSaveToken = (e, index) => {
+                e.preventDefault();
+                const form = e.target;
+                
+                // Get checked categories
+                const targets = [];
+                categories.forEach(cat => {
+                    if(form[`cat_${cat}`]?.checked) targets.push(cat);
+                });
+
+                const newToken = {
+                    id: form.id.value || 't_' + Date.now(),
+                    label: form.label.value,
+                    icon: form.iconVal.value,
+                    class: form.colorClass.value,
+                    targetCategories: targets
+                };
+
+                const newTokens = [...tokens];
+                if(index === -1) newTokens.push(newToken);
+                else newTokens[index] = newToken;
+
+                const newData = { ...menuData };
+                if(!newData._Config) newData._Config = {};
+                newData._Config.slotConfig = newTokens;
+                
+                onSave(newData).then(() => {
+                    setTokens(newTokens);
+                    setEditingToken(null);
+                });
+            };
+
+            const handleDelete = (idx) => {
+                if(!confirm('Bu jetonu silmek istediğinize emin misiniz?')) return;
+                const newTokens = [...tokens];
+                newTokens.splice(idx, 1);
+                
+                const newData = { ...menuData };
+                newData._Config.slotConfig = newTokens;
+                onSave(newData).then(() => setTokens(newTokens));
+            };
+
+            const colors = [
+                { id: 'coin-bronze', name: 'Bronz', hex: '#D2691E' },
+                { id: 'coin-silver', name: 'Gümüş', hex: '#A1A1AA' },
+                { id: 'coin-gold', name: 'Altın', hex: '#EAB308' },
+                { id: 'coin-rose', name: 'Rose', hex: '#DB2777' },
+            ];
+
+            if (editingToken) {
+                const { token, index } = editingToken;
+                return (
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 animate-[fadeIn_0.3s_ease-out]">
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-2xl font-bold">{index === -1 ? 'Yeni Jeton Ekle' : 'Jeton Düzenle'}</h2>
+                            <button onClick={() => setEditingToken(null)} className="p-2 hover:bg-gray-100 rounded-full"><i data-lucide="x"></i></button>
+                        </div>
+                        
+                        <form onSubmit={(e) => handleSaveToken(e, index)} className="space-y-6">
+                            <input type="hidden" name="id" value={token.id || ''} />
+                            
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Jeton Adı (Kısa tutun)</label>
+                                <input name="label" required defaultValue={token.label} placeholder="Örn: Sıcak" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-primary" />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Jeton Rengi</label>
+                                <div className="flex gap-4">
+                                    {colors.map(c => (
+                                        <label key={c.id} className="cursor-pointer group flex flex-col items-center gap-2">
+                                            <input type="radio" name="colorClass" value={c.id} defaultChecked={token.class === c.id || (index===-1 && c.id==='coin-bronze')} className="hidden peer" />
+                                            <div className="w-12 h-12 rounded-full border-4 border-transparent peer-checked:border-primary transition-all flex items-center justify-center shadow-sm" style={{backgroundColor: c.hex}}></div>
+                                            <span className="text-xs font-semibold text-gray-500 peer-checked:text-primary">{c.name}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">İkon</label>
+                                <IconPicker value={token.icon || 'coffee'} onChange={(val) => { document.getElementById('iconVal').value = val; setEditingToken({...editingToken, token: {...token, icon: val}}) }} />
+                                <input type="hidden" id="iconVal" name="iconVal" value={token.icon || 'coffee'} />
+                            </div>
+
+                            <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                                <label className="block text-sm font-bold text-gray-700 mb-3">Bu Jeton Hangi Kategorilerden Çekiliş Yapsın?</label>
+                                <div className="grid grid-cols-2 gap-3">
+                                    {categories.map(cat => (
+                                        <label key={cat} className="flex items-center gap-2 cursor-pointer">
+                                            <input type="checkbox" name={`cat_${cat}`} defaultChecked={(token.targetCategories || []).includes(cat) || (index===-1 && token.targetCategories?.length === 0)} className="w-4 h-4 text-primary rounded focus:ring-primary" />
+                                            <span className="text-sm text-gray-700">{cat}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                                <p className="text-xs text-gray-500 mt-3 italic">* Hiçbir kategori seçmezseniz "Tüm Menü" geçerli olur.</p>
+                            </div>
+
+                            <div className="flex gap-4 mt-6">
+                                <button type="button" onClick={() => setEditingToken(null)} className="w-1/3 bg-gray-200 text-gray-700 font-bold py-4 rounded-xl hover:bg-gray-300 transition-colors">İptal</button>
+                                <button type="submit" className="w-2/3 bg-primary text-white font-bold py-4 rounded-xl hover:bg-orange-600 transition-colors shadow-md">
+                                    Jetonu Kaydet
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="animate-[fadeIn_0.3s_ease-out] max-w-4xl mx-auto">
+                    <div className="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 className="text-2xl font-bold">Slot Makinesi Jetonları</h2>
+                            <p className="text-sm text-gray-500 mt-1">Müşterilerin çarkıfelek oynayacağı jetonları yönetin.</p>
+                        </div>
+                        <button onClick={() => setEditingToken({ index: -1, token: { targetCategories: [] } })} className="bg-gray-900 text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-gray-800 shadow-sm shrink-0">
+                            <i data-lucide="plus" className="w-4 h-4"></i> Yeni Jeton
+                        </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {tokens.map((token, idx) => {
+                            const colorHex = colors.find(c => c.id === token.class)?.hex || '#ccc';
+                            return (
+                                <div key={idx} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex flex-col hover:border-primary/50 transition-colors">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <div className="w-14 h-14 rounded-full flex items-center justify-center text-white shadow-inner" style={{backgroundColor: colorHex}}>
+                                            <i data-lucide={token.icon} className="w-6 h-6"></i>
+                                        </div>
+                                        <div className="flex gap-1">
+                                            <button onClick={() => setEditingToken({ index: idx, token })} className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg"><i data-lucide="edit-3" className="w-4 h-4"></i></button>
+                                            <button onClick={() => handleDelete(idx)} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg"><i data-lucide="trash-2" className="w-4 h-4"></i></button>
+                                        </div>
+                                    </div>
+                                    <h3 className="font-bold text-lg mb-1">{token.label}</h3>
+                                    <p className="text-xs text-gray-500 line-clamp-2">
+                                        {(token.targetCategories && token.targetCategories.length > 0) ? token.targetCategories.join(', ') : 'Tüm Menü'}
+                                    </p>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        };
+
+        const SettingsView = () => {
+            useEffect(() => { lucide.createIcons(); });
+            const [newToken, setNewToken] = useState('');
+            const [busy, setBusy] = useState(false);
+            const [feedback, setFeedback] = useState(null); // {type: 'ok'|'err', msg}
+
+            const handleLogout = () => {
+                localStorage.clear();
+                window.location.reload();
+            };
+
+            const testConnection = async () => {
+                setBusy(true);
+                setFeedback(null);
+                const { username, repo, token } = getGithubCredentials();
+                try {
+                    const res = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/data.json`, {
+                        headers: { 'Authorization': `token ${token}` }
+                    });
+                    if (res.ok) setFeedback({ type: 'ok', msg: '✓ Bağlantı başarılı. Her şey çalışıyor.' });
+                    else if (res.status === 401) setFeedback({ type: 'err', msg: 'Token geçersiz veya süresi dolmuş (401).' });
+                    else if (res.status === 404) setFeedback({ type: 'err', msg: `Repo bulunamadı (404): ${username}/${repo}` });
+                    else if (res.status === 403) setFeedback({ type: 'err', msg: 'Erişim reddedildi (403). Token "repo" yetkisine sahip olmalı.' });
+                    else setFeedback({ type: 'err', msg: `HTTP ${res.status}` });
+                } catch (e) {
+                    setFeedback({ type: 'err', msg: 'Bağlantı hatası: ' + e.message });
+                }
+                setBusy(false);
+            };
+
+            const updateToken = async () => {
+                const t = newToken.trim();
+                if (!t) { setFeedback({ type: 'err', msg: 'Önce yeni token\'ı yapıştır.' }); return; }
+                setBusy(true);
+                setFeedback(null);
+                const { username, repo } = getGithubCredentials();
+                try {
+                    // Önce token geçerli mi?
+                    const userRes = await fetch('https://api.github.com/user', {
+                        headers: { 'Authorization': `token ${t}` }
+                    });
+                    if (!userRes.ok) {
+                        setFeedback({ type: 'err', msg: userRes.status === 401 ? 'Bu token geçersiz veya süresi dolmuş.' : `Token kontrolü başarısız: HTTP ${userRes.status}` });
+                        setBusy(false);
+                        return;
+                    }
+                    // Repo erişimi var mı?
+                    const repoRes = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/data.json`, {
+                        headers: { 'Authorization': `token ${t}` }
+                    });
+                    if (!repoRes.ok) {
+                        setFeedback({ type: 'err', msg: `Token geçerli ama repoya erişemiyor (HTTP ${repoRes.status}). Token'da "repo" yetkisi var mı?` });
+                        setBusy(false);
+                        return;
+                    }
+                    // Geçti — kaydet
+                    localStorage.setItem('github_token', t);
+                    setNewToken('');
+                    setFeedback({ type: 'ok', msg: '✓ Token güncellendi ve doğrulandı. Sayfa yenileniyor...' });
+                    setTimeout(() => window.location.reload(), 1200);
+                } catch (e) {
+                    setFeedback({ type: 'err', msg: 'Bağlantı hatası: ' + e.message });
+                    setBusy(false);
+                }
+            };
+
+            return (
+                <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8 animate-[fadeIn_0.3s_ease-out]">
+                    <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100">
+                        <div className="w-12 h-12 bg-gray-100 text-gray-600 rounded-xl flex items-center justify-center shrink-0">
+                            <i data-lucide="github" className="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h2 className="text-2xl font-bold">Hesap Ayarları</h2>
+                            <p className="text-sm text-gray-500">Github bağlantı bilgileri.</p>
+                        </div>
+                    </div>
+
+                    <div className="space-y-4 mb-6">
+                        <div>
+                            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Github Kullanıcı Adı</label>
+                            <div className="font-semibold">{localStorage.getItem('github_username')}</div>
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Depo Adı</label>
+                            <div className="font-semibold">{localStorage.getItem('github_repo')}</div>
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Mevcut Token</label>
+                            <div className="font-mono text-sm text-gray-600">{(localStorage.getItem('github_token') || '').slice(0, 10)}••••••••</div>
+                        </div>
+                    </div>
+
+                    <button onClick={testConnection} disabled={busy} className="w-full mb-6 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold transition-colors flex items-center justify-center gap-2 disabled:opacity-60">
+                        <i data-lucide="plug" className="w-4 h-4"></i>
+                        Bağlantıyı Test Et
+                    </button>
+
+                    <div className="border-t border-gray-100 pt-6 mb-6">
+                        <h3 className="font-bold text-gray-800 mb-1">Token'ı Güncelle</h3>
+                        <p className="text-xs text-gray-500 mb-3">Yeni Personal Access Token'ı yapıştır. Otomatik doğrulanıp kaydedilir.</p>
+                        <div className="flex gap-2">
+                            <input
+                                type="password"
+                                value={newToken}
+                                onChange={(e) => setNewToken(e.target.value)}
+                                placeholder="ghp_..."
+                                disabled={busy}
+                                className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none disabled:opacity-50"
+                            />
+                            <button onClick={updateToken} disabled={busy} className="px-5 py-3 rounded-xl bg-primary text-white font-bold hover:bg-orange-600 transition-colors disabled:opacity-60 flex items-center gap-2">
+                                {busy ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span> : <i data-lucide="check" className="w-4 h-4"></i>}
+                                Güncelle
+                            </button>
+                        </div>
+                    </div>
+
+                    {feedback && (
+                        <div className={`mb-6 p-3 rounded-xl text-sm flex items-start gap-2 ${feedback.type === 'ok' ? 'bg-green-50 border border-green-200 text-green-700' : 'bg-red-50 border border-red-200 text-red-700'}`}>
+                            <i data-lucide={feedback.type === 'ok' ? 'check-circle' : 'alert-circle'} className="w-4 h-4 mt-0.5 shrink-0"></i>
+                            <span>{feedback.msg}</span>
+                        </div>
+                    )}
+
+                    <button onClick={handleLogout} className="w-full py-4 rounded-xl border-2 border-red-100 text-red-600 font-bold hover:bg-red-50 transition-colors flex items-center justify-center gap-2">
+                        <i data-lucide="log-out" className="w-5 h-5"></i>
+                        Çıkış Yap (Bağlantıyı Kes)
+                    </button>
+                </div>
+            );
+        };
+
+        const LoginScreen = ({ onLogin }) => {
+            const [isChecking, setIsChecking] = useState(false);
+            const [errorMsg, setErrorMsg] = useState('');
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                const username = e.target.username.value.trim();
+                const repo = e.target.repo.value.trim();
+                const token = e.target.token.value.trim();
+
+                if (!username || !repo || !token) {
+                    setErrorMsg('Tüm alanları doldurun.');
+                    return;
+                }
+
+                setIsChecking(true);
+                setErrorMsg('');
+
+                try {
+                    // 1) Token geçerli mi?
+                    const userRes = await fetch('https://api.github.com/user', {
+                        headers: { 'Authorization': `token ${token}` }
+                    });
+                    if (userRes.status === 401) {
+                        setErrorMsg('Token geçersiz veya süresi dolmuş. GitHub > Settings > Developer settings > Personal access tokens kısmından yeni bir token oluşturun ("repo" yetkisi olmalı).');
+                        setIsChecking(false);
+                        return;
+                    }
+                    if (!userRes.ok) {
+                        setErrorMsg(`Token doğrulanamadı (HTTP ${userRes.status}). İnternet bağlantınızı veya token'ı kontrol edin.`);
+                        setIsChecking(false);
+                        return;
+                    }
+
+                    // 2) Repo erişimi ve data.json var mı?
+                    const repoRes = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/data.json`, {
+                        headers: { 'Authorization': `token ${token}` }
+                    });
+                    if (repoRes.status === 404) {
+                        setErrorMsg(`Repo veya data.json bulunamadı. "${username}/${repo}" doğru mu? Repo private ise token'ın bu repoya erişim yetkisi olmalı.`);
+                        setIsChecking(false);
+                        return;
+                    }
+                    if (repoRes.status === 403) {
+                        setErrorMsg('Erişim reddedildi (403). Token "repo" yetkisine sahip olmalı.');
+                        setIsChecking(false);
+                        return;
+                    }
+                    if (!repoRes.ok) {
+                        setErrorMsg(`Repo kontrolü başarısız (HTTP ${repoRes.status}).`);
+                        setIsChecking(false);
+                        return;
+                    }
+
+                    // Her şey tamam — kaydet ve giriş yap
+                    localStorage.setItem('github_username', username);
+                    localStorage.setItem('github_repo', repo);
+                    localStorage.setItem('github_token', token);
+                    onLogin();
+                } catch (err) {
+                    console.error(err);
+                    setErrorMsg('Bağlantı hatası: ' + err.message);
+                    setIsChecking(false);
+                }
+            };
+
+            return (
+                <div className="min-h-screen bg-primary flex items-center justify-center p-4">
+                    <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md animate-[fadeIn_0.5s_ease-out]">
+                        <div className="text-center mb-8">
+                            <div className="w-16 h-16 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <i data-lucide="lock" className="w-8 h-8"></i>
+                            </div>
+                            <h1 className="text-3xl font-bold text-gray-800">Admin Girişi</h1>
+                            <p className="text-gray-500 text-sm mt-2">Github API bilgilerinizi girerek menünüzü yönetmeye başlayın.</p>
+                        </div>
+
+                        {errorMsg && (
+                            <div className="mb-5 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2">
+                                <i data-lucide="alert-circle" className="w-4 h-4 mt-0.5 shrink-0"></i>
+                                <span>{errorMsg}</span>
+                            </div>
+                        )}
+
+                        <form onSubmit={handleSubmit} className="space-y-5">
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Github Kullanıcı Adı</label>
+                                <input name="username" required placeholder="Örn: ahmet123" disabled={isChecking} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none disabled:opacity-50" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Github Repo Adı</label>
+                                <input name="repo" required placeholder="Örn: qr-menu" disabled={isChecking} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none disabled:opacity-50" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Personal Access Token</label>
+                                <input name="token" required type="password" placeholder="ghp_..." disabled={isChecking} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary outline-none disabled:opacity-50" />
+                            </div>
+                            <button type="submit" disabled={isChecking} className="w-full bg-gray-900 text-white font-bold py-4 rounded-xl hover:bg-gray-800 transition-colors shadow-lg mt-4 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                                {isChecking ? (
+                                    <>
+                                        <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                                        Doğrulanıyor...
+                                    </>
+                                ) : 'Giriş Yap'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

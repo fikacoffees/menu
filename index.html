@@ -2,909 +2,832 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fika Coffee - Butik Kahve Dükkanı</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Fika Coffee</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 
+                        primary: '#E86A33', 
+                        primaryDark: '#C55527', 
+                        cream: '#FDFBF7', 
+                        darkText: '#2C1E16',
+                        gold: '#D4AF37'
+                    },
+                    fontFamily: { heading: ['"Cormorant Garamond"', 'serif'], body: ['Jost', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        body { background-color: #E86A33; color: #FDFBF7; -webkit-font-smoothing: antialiased; overscroll-behavior-y: none; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .item-card { background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); cursor: pointer; }
+        
+        @keyframes shine {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        .btn-shine {
+            background: linear-gradient(120deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 70%);
+            background-size: 200% auto;
+            animation: shine 3s infinite linear;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
-
-        .container {
-            max-width: 430px;
-            margin: 0 auto;
-            background: white;
-            min-height: 100vh;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        }
-
-        .header {
-            background: linear-gradient(90deg, #c4390e 0%, #c4390e 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
+        /* --- GERÇEKÇİ JETON (ARCADE COIN) CSS --- */
+        .coin-base {
+            box-shadow: 
+                inset 0 0 0 1px rgba(255,255,255,0.4),
+                inset 0 0 0 3px rgba(0,0,0,0.3),
+                inset 0 4px 6px rgba(255,255,255,0.7),
+                inset 0 -4px 6px rgba(0,0,0,0.6),
+                0 10px 15px -3px rgba(0,0,0,0.7),
+                0 4px 6px -2px rgba(0,0,0,0.5);
+            border-radius: 50%;
             position: relative;
         }
-
-        .header-logo {
-            width: 80px;
-            height: 80px;
+        
+        .coin-inner {
+            position: absolute;
+            inset: 6px;
             border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 15px;
-            border: 3px solid white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
-        .header h1 {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            line-height: 1.2;
-        }
-
-        .header-subtitle {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-
-        .header-slogan {
-            font-size: 13px;
-            opacity: 0.85;
-            font-style: italic;
-            line-height: 1.4;
-            max-width: 300px;
-            margin: 0 auto;
-        }
-
-        .tabs {
+            box-shadow: 
+                inset 0 2px 5px rgba(0,0,0,0.5),
+                0 2px 3px rgba(255,255,255,0.6);
+            border: 2px dashed rgba(0,0,0,0.2);
             display: flex;
-            justify-content: space-around;
-            padding: 20px 10px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .tab {
-            display: flex;
-            flex-direction: column;
             align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            padding: 10px;
-            border-radius: 15px;
-            min-width: 80px;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(255,255,255,0.35) 0%, rgba(0,0,0,0.15) 100%);
         }
 
-        .tab:hover {
-            background: rgba(196, 57, 14, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .tab.active {
-            background: rgba(196, 57, 14, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .tab-image {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #c4390e;
-            margin-bottom: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .tab-title {
-            font-size: 12px;
-            font-weight: 600;
-            color: #555;
-            text-align: center;
-        }
-
-        .content {
-            padding: 20px;
-        }
-
-        .category-section {
-            display: none;
-        }
-
-        .category-section.active {
-            display: block;
-        }
-
-        .subcategory {
-            margin-bottom: 15px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .subcategory-header {
-            background: linear-gradient(90deg, #c4390e 0%, #c4390e 100%);
-            color: white;
-            padding: 15px 20px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.3s ease;
-            user-select: none;
-        }
-
-        .subcategory-header:hover {
-            background: linear-gradient(90deg, #a52f0b 0%, #a52f0b 100%);
-        }
-
-        .subcategory-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin: 0;
-        }
-
-        .subcategory-arrow {
-            font-size: 18px;
-            transition: transform 0.3s ease;
-        }
-
-        .subcategory-arrow.rotated {
-            transform: rotate(180deg);
-        }
-
-        .subcategory-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            background: white;
-        }
-
-        .subcategory-content.open {
-            max-height: 2000px;
-        }
-
-        .subcategory-items {
-            padding: 15px;
-        }
-
-        .menu-item {
-            background: #f0f0f0;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 8px;
-            border-left: 3px solid #c4390e;
-            transition: all 0.3s ease;
-        }
-
-        .menu-item:hover {
-            background: #e0e0e0;
-            transform: translateX(3px);
-        }
-
-        .item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 8px;
-        }
-
-        .item-name {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            flex: 1;
-        }
-
-        .item-price {
-            font-size: 16px;
-            font-weight: bold;
-            color: #c4390e;
-            margin-left: 10px;
-        }
-
-        .item-description {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.4;
-        }
-
-        .placeholder {
-            text-align: center;
-            padding: 40px 20px;
-            color: #999;
-            font-style: italic;
-        }
-
-        .placeholder h3 {
-            margin-bottom: 10px;
-            color: #c4390e;
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                max-width: 100%;
-            }
-            
-            .tabs {
-                padding: 15px 5px;
-            }
-            
-            .tab-image {
-                width: 50px;
-                height: 50px;
-            }
-            
-            .tab-title {
-                font-size: 11px;
-            }
-            
-            .content {
-                padding: 15px;
-            }
+        .coin-bronze { background: conic-gradient(from 20deg, #8B4513, #D2691E, #F4A460, #D2691E, #8B4513, #D2691E, #F4A460, #D2691E, #8B4513); }
+        .coin-silver { background: conic-gradient(from 20deg, #71717A, #A1A1AA, #E4E4E7, #A1A1AA, #71717A, #A1A1AA, #E4E4E7, #A1A1AA, #71717A); }
+        .coin-rose   { background: conic-gradient(from 20deg, #9D174D, #DB2777, #FBCFE8, #DB2777, #9D174D, #DB2777, #FBCFE8, #DB2777, #9D174D); }
+        .coin-gold   { background: conic-gradient(from 20deg, #B45309, #EAB308, #FEF08A, #EAB308, #B45309, #EAB308, #FEF08A, #EAB308, #B45309); }
+        
+        .coin-engraving {
+            filter: drop-shadow(1px 1px 0px rgba(255,255,255,0.5)) drop-shadow(-1px -1px 0px rgba(0,0,0,0.5));
+            color: rgba(0,0,0,0.65);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <img src="images/logo.jpeg" alt="Fika Coffee Logo" class="header-logo">
-            <h1>Fika Coffee</h1>
-            <p class="header-subtitle">Butik Kahve Dükkanı</p>
-            <p class="header-slogan">Günlük koşturmaya bir fincan kahve ve tatlı ile ara vererek sakinleş ✨</p>
-        </div>
+    <div id="root"></div>
 
-        <div class="tabs">
-            <div class="tab active" onclick="showCategory('icecekler')">
-                <img src="images/icecekler.png" alt="İçecekler" class="tab-image">
-                <div class="tab-title">İçecekler</div>
-            </div>
-            <div class="tab" onclick="showCategory('tatlilar')">
-                <img src="images/tatlilar.png" alt="Tatlılar" class="tab-image">
-                <div class="tab-title">Pastalar</div>
-            </div>
-            <div class="tab" onclick="showCategory('extralar')">
-                <img src="images/extralar.jpg" alt="Extralar" class="tab-image">
-                <div class="tab-title">Extralar</div>
-            </div>
-        </div>
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useMemo } = React;
+        const { motion, AnimatePresence } = window.Motion;
 
-        <div class="content">
-            <!-- İçecekler Kategorisi -->
-            <div id="icecekler" class="category-section active">
-                <div class="subcategory">
-                    <div class="subcategory-header" onclick="toggleSubcategory(this)">
-                        <h3 class="subcategory-title">Sıcak Kahveler</h3>
-                        <span class="subcategory-arrow">▼</span>
-                    </div>
-                    <div class="subcategory-content">
-                        <div class="subcategory-items">
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Latte</div>
-                                    <div class="item-price">120₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Mocha</div>
-                                    <div class="item-price">165₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">White Choc. Mocha</div>
-                                    <div class="item-price">165₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Caramel Macchiato</div>
-                                    <div class="item-price">140₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Toffee Nut Latte</div>
-                                    <div class="item-price">165₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Cappuccino</div>
-                                    <div class="item-price">140₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Cortado</div>
-                                    <div class="item-price">130₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Flat White</div>
-                                    <div class="item-price">140₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Americano</div>
-                                    <div class="item-price">140₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Filtre Kahve</div>
-                                    <div class="item-price">140₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Espresso</div>
-                                    <div class="item-price">110₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Double Espresso</div>
-                                    <div class="item-price">120₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Türk Kahvesi</div>
-                                    <div class="item-price">95₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Sıcak Çikolata</div>
-                                    <div class="item-price">140₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Belgian Chocolate</div>
-                                    <div class="item-price">200₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Salep</div>
-                                    <div class="item-price">140₺</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        // --- WEB AUDIO API SOUND ENGINE ---
+        const SoundEngine = {
+            ctx: null,
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            },
+            playTone(freq, type, duration, vol=0.1) {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                
+                gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
+                
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + duration);
+            },
+            playClick() { 
+                this.init(); 
+                this.playTone(600, 'sine', 0.1, 0.05); 
+            },
+            playCoin() { 
+                this.init(); 
+                this.playTone(987, 'sine', 0.1, 0.1); 
+                setTimeout(() => this.playTone(1318, 'sine', 0.2, 0.1), 100); 
+            },
+            playLever() { 
+                this.init(); 
+                this.playTone(150, 'sawtooth', 0.1, 0.2); 
+                setTimeout(() => this.playTone(100, 'square', 0.2, 0.2), 100); 
+            },
+            playTick() { 
+                this.init(); 
+                this.playTone(800, 'triangle', 0.05, 0.02); 
+            },
+            playWin() { 
+                this.init(); 
+                [523, 659, 783, 1046].forEach((f, i) => {
+                    setTimeout(() => this.playTone(f, 'sine', 0.3, 0.15), i * 150);
+                }); 
+            }
+        };
 
-                <div class="subcategory">
-                    <div class="subcategory-header" onclick="toggleSubcategory(this)">
-                        <h3 class="subcategory-title">Soğuk Kahveler</h3>
-                        <span class="subcategory-arrow">▼</span>
-                    </div>
-                    <div class="subcategory-content">
-                        <div class="subcategory-items">
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Ice Latte</div>
-                                    <div class="item-price">140₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Ice Mocha</div>
-                                    <div class="item-price">165₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Ice W.Chocolate Mocha</div>
-                                    <div class="item-price">165₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Ice Caramel Macchiato</div>
-                                    <div class="item-price">165₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Ice Toffee Nut Latte</div>
-                                    <div class="item-price">165₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Ice Flat White</div>
-                                    <div class="item-price">165₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Ice Americano</div>
-                                    <div class="item-price">150₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Frappuccino</div>
-                                    <div class="item-price">165₺</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=800";
+        // MenuData is now fetched from data.json.
+        // Jetonlar are now dynamically loaded from menuData._Config.slotConfig
 
-                <div class="subcategory">
-                    <div class="subcategory-header" onclick="toggleSubcategory(this)">
-                        <h3 class="subcategory-title">Special Kahveler</h3>
-                        <span class="subcategory-arrow">▼</span>
-                    </div>
-                    <div class="subcategory-content">
-                        <div class="subcategory-items">
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Lotus Latte</div>
-                                    <div class="item-price">165₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Nutella Mocha</div>
-                                    <div class="item-price">165₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Pumpkin Spice Latte</div>
-                                    <div class="item-price">165₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Fındık Çikolata Latte</div>
-                                    <div class="item-price">165₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">ChocolateBerry Latte</div>
-                                    <div class="item-price">165₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Süt Reçelli Latte</div>
-                                    <div class="item-price">165₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Cocostar Latte</div>
-                                    <div class="item-price">165₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Kinder Espresso</div>
-                                    <div class="item-price">140₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Matcha Latte</div>
-                                    <div class="item-price">175₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">V60</div>
-                                    <div class="item-price">165₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Chemex</div>
-                                    <div class="item-price">165₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Cold Brew</div>
-                                    <div class="item-price">180₺</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        const containerVariants = {
+            hidden: { opacity: 0 },
+            visible: { opacity: 1, transition: { staggerChildren: 0.05 } }
+        };
 
-                <div class="subcategory">
-                    <div class="subcategory-header" onclick="toggleSubcategory(this)">
-                        <h3 class="subcategory-title">Soğuk Special İçecekler</h3>
-                        <span class="subcategory-arrow">▼</span>
-                    </div>
-                    <div class="subcategory-content">
-                        <div class="subcategory-items">
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Ice FikaMint</div>
-                                    <div class="item-price">175₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Ice Fındık Çikolata Latte</div>
-                                    <div class="item-price">175₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Ice ChocolateBerry Latte</div>
-                                    <div class="item-price">175₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Ice Pumpkin Spice Latte</div>
-                                    <div class="item-price">175₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Ice Spanish Latte</div>
-                                    <div class="item-price">175₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Berryz</div>
-                                    <div class="item-price">175₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Orange Mango</div>
-                                    <div class="item-price">175₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Cool Lime</div>
-                                    <div class="item-price">175₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Blues</div>
-                                    <div class="item-price">175₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">BerryLime</div>
-                                    <div class="item-price">175₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Black Berryz</div>
-                                    <div class="item-price">175₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Ice Matcha Latte</div>
-                                    <div class="item-price">185₺</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        const itemVariants = {
+            hidden: { opacity: 0, y: 20, scale: 0.98 },
+            visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", damping: 20, stiffness: 100 } }
+        };
 
-                <div class="subcategory">
-                    <div class="subcategory-header" onclick="toggleSubcategory(this)">
-                        <h3 class="subcategory-title">Bitki Çayları</h3>
-                        <span class="subcategory-arrow">▼</span>
-                    </div>
-                    <div class="subcategory-content">
-                        <div class="subcategory-items">
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Kış Çayı</div>
-                                    <div class="item-price">120₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Ada Çayı</div>
-                                    <div class="item-price">120₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Papatya Çayı</div>
-                                    <div class="item-price">120₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Yeşil Çay</div>
-                                    <div class="item-price">120₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Hibiscus Çayı</div>
-                                    <div class="item-price">120₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Cold 911</div>
-                                    <div class="item-price">135₺</div>
-                                </div>
-                                <div class="item-description">Portakal ve Okaliptüs</div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Cloud Catcher</div>
-                                    <div class="item-price">135₺</div>
-                                </div>
-                                <div class="item-description">Kivi-Kiraz</div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Friends</div>
-                                    <div class="item-price">135₺</div>
-                                </div>
-                                <div class="item-description">Mango-Çilek</div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Lady Tea</div>
-                                    <div class="item-price">135₺</div>
-                                </div>
-                                <div class="item-description">Çilek ve Ananas</div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Creamy Jasmine</div>
-                                    <div class="item-price">135₺</div>
-                                </div>
-                                <div class="item-description">Yasemin-Vanilla-Beyaz Çay</div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Siyah Çay</div>
-                                    <div class="item-price">45₺</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        const handleImageError = (e) => {
+            e.target.onerror = null; 
+            e.target.src = FALLBACK_IMAGE;
+        };
 
-            <!-- Pastalar Kategorisi -->
-            <div id="tatlilar" class="category-section">
-                <div class="subcategory">
-                    <div class="subcategory-header" onclick="toggleSubcategory(this)">
-                        <h3 class="subcategory-title">Pastalar</h3>
-                        <span class="subcategory-arrow">▼</span>
-                    </div>
-                    <div class="subcategory-content">
-                        <div class="subcategory-items">
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Pavlova</div>
-                                    <div class="item-price">240₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Ada LOVE</div>
-                                    <div class="item-price">285₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Cocostar</div>
-                                    <div class="item-price">285₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Sufle</div>
-                                    <div class="item-price">285₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Lotus Cake</div>
-                                    <div class="item-price">285₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Fıstık Rüyası</div>
-                                    <div class="item-price">285₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Frambuazlı Cheesecake</div>
-                                    <div class="item-price">285₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Brownie Caramel Cheesecake</div>
-                                    <div class="item-price">285₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">BlueBerry Cake</div>
-                                    <div class="item-price">285₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Tiramisu</div>
-                                    <div class="item-price">285₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Küp Kruvasan</div>
-                                    <div class="item-price">290₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Roll Kruvasan</div>
-                                    <div class="item-price">290₺</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        const App = () => {
+            const [menuData, setMenuData] = useState(null);
+            const [isLoading, setIsLoading] = useState(true);
+            const [activeTab, setActiveTab] = useState(null);
+            const [selectedItem, setSelectedItem] = useState(null);
+            
+            // Slot Machine States
+            const [isSlotModalOpen, setIsSlotModalOpen] = useState(false);
+            const [slotState, setSlotState] = useState('need_token');
+            const [reels, setReels] = useState([[], [], []]);
+            const [winningItem, setWinningItem] = useState(null);
+            
+            // Drag states
+            const [isDraggingToken, setIsDraggingToken] = useState(false);
+            const coinSlotRef = useRef(null);
 
-            <!-- Extralar Kategorisi -->
-            <div id="extralar" class="category-section">
-                <div class="subcategory">
-                    <div class="subcategory-header" onclick="toggleSubcategory(this)">
-                        <h3 class="subcategory-title">Extralar</h3>
-                        <span class="subcategory-arrow">▼</span>
-                    </div>
-                    <div class="subcategory-content">
-                        <div class="subcategory-items">
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Şurup</div>
-                                    <div class="item-price">35₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Süt</div>
-                                    <div class="item-price">35₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Espresso Shot</div>
-                                    <div class="item-price">45₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Uludağ Premium Su</div>
-                                    <div class="item-price">25₺</div>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <div class="item-header">
-                                    <div class="item-name">Uludağ Premium Soda</div>
-                                    <div class="item-price">65₺</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+            // Daily Suggestion State
+            const [isDailyModalOpen, setIsDailyModalOpen] = useState(false);
+            
+            const scrollRef = useRef(null);
 
-    <script>
-        function showCategory(categoryId) {
-            // Tüm kategorileri gizle
-            const categories = document.querySelectorAll('.category-section');
-            categories.forEach(category => {
-                category.classList.remove('active');
-            });
+            useEffect(() => {
+                fetch('data.json?t=' + new Date().getTime(), { cache: 'no-store' })
+                    .then(res => res.json())
+                    .then(data => {
+                        setMenuData(data);
+                        const cats = Object.keys(data).filter(c => c !== '_Config');
+                        setActiveTab(cats[0]);
+                        setIsLoading(false);
+                    })
+                    .catch(err => {
+                        console.error("Menü verisi yüklenemedi:", err);
+                        setIsLoading(false);
+                    });
+            }, []);
 
-            // Tüm tabları pasif yap
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => {
-                tab.classList.remove('active');
-            });
+            const categories = menuData ? Object.keys(menuData).filter(c => c !== '_Config') : [];
 
-            // Seçilen kategoriyi göster
-            document.getElementById(categoryId).classList.add('active');
+            const allItems = useMemo(() => {
+                if (!menuData) return [];
+                return Object.entries(menuData)
+                    .filter(([key]) => key !== 'Extralar' && key !== '_Config')
+                    .map(([_, items]) => items)
+                    .flat()
+                    .filter(item => item.isActive !== false);
+            }, [menuData]);
 
-            // Seçilen tabı aktif yap
-            event.currentTarget.classList.add('active');
+            const Jetonlar = useMemo(() => {
+                if (!menuData || !menuData._Config || !menuData._Config.slotConfig) return [];
+                return menuData._Config.slotConfig;
+            }, [menuData]);
 
-            // Accordion durumlarını ayarla
-            if (categoryId === 'icecekler') {
-                // İçecekler sekmesinde tüm accordion'ları kapat
-                const iceceklerSubcategories = document.querySelectorAll('#icecekler .subcategory-content');
-                iceceklerSubcategories.forEach(subcategory => {
-                    subcategory.classList.remove('open');
+            const dailySuggestion = useMemo(() => {
+                if (!menuData || !menuData._Config || !menuData._Config.dailySuggestion) return null;
+                const config = menuData._Config.dailySuggestion;
+                if (config.isActive === false) return null;
+
+                let drink = null;
+                let food = null;
+                
+                Object.values(menuData).forEach(catItems => {
+                    if (Array.isArray(catItems)) {
+                        catItems.forEach(item => {
+                            if (item.name === config.drinkName && item.isActive !== false) drink = item;
+                            if (item.name === config.foodName && item.isActive !== false) food = item;
+                        });
+                    }
                 });
                 
-                const iceceklerArrows = document.querySelectorAll('#icecekler .subcategory-arrow');
-                iceceklerArrows.forEach(arrow => {
-                    arrow.classList.remove('rotated');
-                });
-            } else {
-                // Pastalar ve Extralar sekmelerinde tüm accordion'ları aç
-                const currentSubcategories = document.querySelectorAll(`#${categoryId} .subcategory-content`);
-                currentSubcategories.forEach(subcategory => {
-                    subcategory.classList.add('open');
-                });
+                if (!drink || !food) return null;
+
+                const parsePrice = (priceStr) => parseInt(priceStr.replace(/\D/g, '')) || 0;
+                const totalPrice = parsePrice(drink.price) + parsePrice(food.price);
+                const comboPrice = Math.max(0, totalPrice - (config.discountAmount || 0)); 
                 
-                const currentArrows = document.querySelectorAll(`#${categoryId} .subcategory-arrow`);
-                currentArrows.forEach(arrow => {
-                    arrow.classList.add('rotated');
+                return { drink, food, totalPrice, comboPrice, discountAmount: config.discountAmount || 0 };
+            }, [menuData]);
+
+            const SLOT_ITEM_HEIGHT = 150;
+            const TARGET_INDEX = 40; 
+
+            const openSlotModal = () => {
+                SoundEngine.playClick();
+                setSlotState('need_token');
+                
+                const dummyReels = Array.from({length: 3}, () => 
+                    Array.from({length: 5}, () => allItems[Math.floor(Math.random() * allItems.length)])
+                );
+                setReels(dummyReels);
+                setIsSlotModalOpen(true);
+            };
+
+            const handleTokenDrop = (e, info, catId) => {
+                setIsDraggingToken(false);
+                if (!coinSlotRef.current) return;
+
+                const slotRect = coinSlotRef.current.getBoundingClientRect();
+                const { x, y } = info.point;
+                const padding = 60; 
+
+                if (
+                    x >= slotRect.left - padding &&
+                    x <= slotRect.right + padding &&
+                    y >= slotRect.top - padding &&
+                    y <= slotRect.bottom + padding
+                ) {
+                    insertToken(catId);
+                }
+            };
+
+            const insertToken = (catId) => {
+                SoundEngine.playCoin(); // Jeton sesi
+
+                const tokenConfig = Jetonlar.find(j => j.id === catId);
+                let itemsList = [];
+                
+                if (tokenConfig && tokenConfig.targetCategories && tokenConfig.targetCategories.length > 0) {
+                    tokenConfig.targetCategories.forEach(cat => {
+                        if (menuData[cat]) {
+                            itemsList = [...itemsList, ...menuData[cat].filter(item => item.isActive !== false)];
+                        }
+                    });
+                } else {
+                    itemsList = allItems;
+                }
+                
+                if (itemsList.length === 0) itemsList = allItems; 
+
+                const winner = itemsList[Math.floor(Math.random() * itemsList.length)];
+                setWinningItem(winner);
+
+                const newReels = Array.from({length: 3}, () => 
+                    Array.from({length: 50}, () => itemsList[Math.floor(Math.random() * itemsList.length)])
+                );
+
+                newReels.forEach(strip => {
+                    strip[TARGET_INDEX] = winner;
                 });
-            }
-        }
 
-        function toggleSubcategory(header) {
-            const content = header.nextElementSibling;
-            const arrow = header.querySelector('.subcategory-arrow');
-            
-            if (content.classList.contains('open')) {
-                // Kapat
-                content.classList.remove('open');
-                arrow.classList.remove('rotated');
-            } else {
-                // Aç
-                content.classList.add('open');
-                arrow.classList.add('rotated');
-            }
-        }
+                setReels(newReels);
+                setSlotState('idle'); 
+            };
 
-        // Sayfa yüklendiğinde İçecekler sekmesinde accordion'ları kapat
-        document.addEventListener('DOMContentLoaded', function() {
-            // İçecekler sekmesindeki tüm accordion'ları kapat
-            const iceceklerSubcategories = document.querySelectorAll('#icecekler .subcategory-content');
-            iceceklerSubcategories.forEach(subcategory => {
-                subcategory.classList.remove('open');
-            });
-            
-            // İçecekler sekmesindeki tüm okları döndür
-            const iceceklerArrows = document.querySelectorAll('#icecekler .subcategory-arrow');
-            iceceklerArrows.forEach(arrow => {
-                arrow.classList.remove('rotated');
-            });
-        });
+            const handleSpin = () => {
+                if (slotState !== 'idle') return;
+                setSlotState('spinning');
+                
+                SoundEngine.playLever(); // Kol Çekme Sesi
+
+                // Tıkırtı efekti (Makaralar dönerken)
+                const tickInterval = setInterval(() => {
+                    SoundEngine.playTick();
+                }, 100);
+
+                setTimeout(() => {
+                    clearInterval(tickInterval);
+                    setSlotState('done');
+                    SoundEngine.playWin(); // Kazanma sesi
+
+                    setTimeout(() => {
+                        setIsSlotModalOpen(false);
+                        setTimeout(() => {
+                            SoundEngine.playClick();
+                            setSelectedItem(winningItem);
+                        }, 300);
+                    }, 2500);
+                }, 5000); 
+            };
+
+            useEffect(() => { 
+                lucide.createIcons();
+            }, [activeTab, selectedItem, isSlotModalOpen, isDailyModalOpen, slotState, isDraggingToken]);
+
+            useEffect(() => {
+                const activeEl = document.getElementById("tab-" + activeTab);
+                if(activeEl && scrollRef.current) {
+                    const scrollContainer = scrollRef.current;
+                    const scrollPosition = activeEl.offsetLeft - (scrollContainer.offsetWidth / 2) + (activeEl.offsetWidth / 2);
+                    scrollContainer.scrollTo({ left: scrollPosition, behavior: 'smooth' });
+                }
+            }, [activeTab]);
+
+            if (isLoading) {
+                return (
+                    <div className="min-h-screen bg-primary flex flex-col items-center justify-center">
+                        <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <p className="mt-4 text-white font-heading italic text-xl">Menü Yükleniyor...</p>
+                    </div>
+                );
+            }
+            if (!menuData) return <div className="min-h-screen bg-primary flex items-center justify-center text-white p-8 text-center">Menü yüklenirken bir hata oluştu.</div>;
+
+            return (
+                <div className="relative min-h-screen pb-20 selection:bg-white/30 overflow-x-hidden">
+                    <motion.div 
+                        animate={{ 
+                            scale: (selectedItem || isSlotModalOpen || isDailyModalOpen) ? 0.96 : 1, 
+                            filter: (selectedItem || isSlotModalOpen || isDailyModalOpen) ? "brightness(0.6)" : "brightness(1)", 
+                            y: (selectedItem || isSlotModalOpen || isDailyModalOpen) ? -10 : 0 
+                        }}
+                        transition={{ type: "spring", damping: 25, stiffness: 120 }}
+                        className="relative z-10 origin-top min-h-screen"
+                    >
+                        {/* HERO HEADER */}
+                        <header className="relative h-[48vh] sm:h-[45vh] flex flex-col items-center justify-center px-6 overflow-hidden">
+                            <motion.div initial={{ opacity: 0, scale: 1.1 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 2 }} className="absolute inset-0 z-0">
+                                <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=1200" onError={handleImageError} className="w-full h-full object-cover opacity-30 mix-blend-overlay" alt="hero" />
+                                <div className="absolute inset-0 bg-gradient-to-b from-primary/80 via-primary/60 to-primary pointer-events-none"></div>
+                            </motion.div>
+
+                            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2, duration: 1 }} className="relative z-10 text-center flex flex-col items-center mt-4">
+                                <h1 className="font-heading text-6xl md:text-8xl italic font-semibold tracking-tighter text-white mb-2 drop-shadow-md">Fika Coffee</h1>
+                                <div className="flex items-center justify-center gap-3">
+                                    <div className="h-[1px] w-8 bg-white/50"></div>
+                                    <span className="font-body text-[10px] tracking-[0.5em] text-white uppercase font-bold drop-shadow-sm">Ferah & Taze</span>
+                                    <div className="h-[1px] w-8 bg-white/50"></div>
+                                </div>
+
+                                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8 w-full max-w-sm sm:max-w-none px-4">
+                                    {dailySuggestion && (
+                                        <motion.button
+                                            initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3, duration: 1 }}
+                                            onClick={() => { SoundEngine.playClick(); setIsDailyModalOpen(true); }}
+                                            className="w-full sm:w-auto relative px-6 py-3 rounded-full flex items-center justify-center gap-3 bg-gradient-to-r from-yellow-500/30 to-orange-400/30 backdrop-blur-md border border-yellow-300 hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(250,204,21,0.4)] group overflow-hidden"
+                                        >
+                                            <div className="absolute inset-0 btn-shine opacity-50 pointer-events-none"></div>
+                                            <i data-lucide="sparkles" className="text-yellow-300 w-5 h-5 fill-yellow-300/30 animate-pulse relative z-10"></i>
+                                            <span className="font-body text-xs sm:text-sm uppercase tracking-[0.15em] text-white font-extrabold relative z-10 drop-shadow-md">Günün İkilisi</span>
+                                        </motion.button>
+                                    )}
+
+                                    <motion.button
+                                        initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4, duration: 1 }}
+                                        onClick={openSlotModal}
+                                        className="w-full sm:w-auto px-6 py-3 border border-white/40 rounded-full flex items-center justify-center gap-3 bg-white/10 backdrop-blur-md hover:bg-white hover:text-primary transition-all duration-300 group shadow-sm hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] text-white"
+                                    >
+                                        <span className="font-body text-xs sm:text-sm uppercase tracking-[0.15em] font-bold">Ne İçsem?</span>
+                                        <i data-lucide="dices" className="w-5 h-5 transition-colors"></i>
+                                    </motion.button>
+                                </div>
+                            </motion.div>
+                        </header>
+
+                        {/* NAV TABS */}
+                        <div className="sticky top-0 z-30 px-4 py-4 bg-primary/95 backdrop-blur-xl border-b border-white/10 shadow-sm">
+                            <div ref={scrollRef} className="flex gap-2 overflow-x-auto no-scrollbar snap-x snap-mandatory">
+                                {categories.map(cat => (
+                                    <button 
+                                        key={cat} id={"tab-" + cat} 
+                                        onClick={() => { SoundEngine.playClick(); setActiveTab(cat); }} 
+                                        className="relative px-5 py-2.5 shrink-0 snap-center rounded-full transition-all duration-300"
+                                    >
+                                        <span className={`relative z-10 font-body text-[11px] uppercase tracking-widest font-semibold transition-colors duration-300 ${activeTab === cat ? 'text-primary' : 'text-white/80 hover:text-white'}`}>
+                                            {cat}
+                                        </span>
+                                        {activeTab === cat && <motion.div layoutId="activeTab" className="absolute inset-0 bg-white rounded-full shadow-md" transition={{ type: "spring", bounce: 0.2, duration: 0.6 }} />}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* MENU GRID */}
+                        <motion.main key={activeTab} variants={containerVariants} initial="hidden" animate="visible" className="container mx-auto max-w-2xl px-4 py-8">
+                            {(menuData[activeTab] || []).filter(item => item.isActive !== false).map((item, idx) => (
+                                <motion.div key={item.name} variants={itemVariants} whileTap={{ scale: 0.96 }} onClick={() => { SoundEngine.playClick(); setSelectedItem(item); }} className="item-card group flex items-center p-3 mb-4 rounded-3xl cursor-pointer hover:border-white/50 transition-all duration-300 shadow-sm hover:shadow-md">
+                                    <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden shadow-lg shrink-0 bg-white/20 relative">
+                                        <img src={item.img} onError={handleImageError} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" alt={item.name} />
+                                    </div>
+                                    <div className="ml-4 flex-1 pr-2">
+                                        <div className="flex justify-between items-start mb-1">
+                                            <h3 className="font-heading text-xl md:text-2xl italic font-semibold text-white tracking-wide leading-tight drop-shadow-sm">{item.name}</h3>
+                                            <span className="font-body font-bold text-white text-lg drop-shadow-sm">{item.price}</span>
+                                        </div>
+                                        <p className="font-body text-[11px] md:text-xs text-white/90 font-light line-clamp-2 leading-relaxed italic pr-4">{item.desc}</p>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </motion.main>
+                    </motion.div>
+
+                    {/* DAILY SUGGESTION MODAL */}
+                    <AnimatePresence>
+                        {isDailyModalOpen && dailySuggestion && (
+                            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => { SoundEngine.playClick(); setIsDailyModalOpen(false); }} className="absolute inset-0 bg-black/60 backdrop-blur-md" />
+                                <motion.div initial={{ scale: 0.9, opacity: 0, rotateX: 10 }} animate={{ scale: 1, opacity: 1, rotateX: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="relative w-full max-w-lg bg-cream rounded-[2rem] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.5)] border border-white/50 flex flex-col max-h-[90vh]">
+                                    <div className="shrink-0 relative bg-gradient-to-br from-[#1A1A1A] to-[#2C1E16] text-white text-center py-6 sm:py-8 px-6 overflow-hidden">
+                                        <div className="absolute top-0 right-0 p-4 z-20 cursor-pointer" onClick={() => { SoundEngine.playClick(); setIsDailyModalOpen(false); }}>
+                                            <i data-lucide="x" className="w-6 h-6 text-white/50 hover:text-white transition-colors"></i>
+                                        </div>
+                                        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.4),transparent_70%)]"></div>
+                                        <div className="relative z-10 flex flex-col items-center">
+                                            <span className="px-3 py-1 bg-gold/20 border border-gold/40 text-gold text-[9px] uppercase tracking-widest font-bold rounded-full mb-2 sm:mb-3 flex items-center gap-1.5">
+                                                <i data-lucide="crown" className="w-3 h-3"></i> Fika'nın Seçimi
+                                            </span>
+                                            <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl italic font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-gold to-yellow-400">Günün Kusursuz İkilisi</h2>
+                                            <p className="font-body text-[11px] sm:text-xs text-white/70 mt-1 sm:mt-2 font-light">Sizin için özenle eşleştirdik.</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="p-6 sm:p-8 bg-cream overflow-y-auto no-scrollbar pb-8">
+                                        <div className="flex flex-col sm:flex-row items-center gap-4 relative">
+                                            <div className="flex-1 w-full bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex flex-col items-center text-center group hover:shadow-md transition-shadow">
+                                                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mb-3 border-4 border-cream shadow-inner relative">
+                                                    <img src={dailySuggestion.drink.img} onError={handleImageError} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="drink" />
+                                                </div>
+                                                <h3 className="font-heading italic text-lg sm:text-xl font-bold text-darkText leading-tight">{dailySuggestion.drink.name}</h3>
+                                                <p className="font-body text-[10px] text-gray-500 mt-1 line-clamp-2">{dailySuggestion.drink.desc}</p>
+                                                <span className="mt-2 sm:mt-3 font-body font-bold text-primary">{dailySuggestion.drink.price}</span>
+                                            </div>
+
+                                            <div className="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary relative z-10 -my-4 sm:my-0 sm:-mx-4 shadow-sm border border-white bg-white">
+                                                <i data-lucide="plus" className="w-4 h-4 sm:w-5 sm:h-5"></i>
+                                            </div>
+
+                                            <div className="flex-1 w-full bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex flex-col items-center text-center group hover:shadow-md transition-shadow">
+                                                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mb-3 border-4 border-cream shadow-inner relative">
+                                                    <img src={dailySuggestion.food.img} onError={handleImageError} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="food" />
+                                                </div>
+                                                <h3 className="font-heading italic text-lg sm:text-xl font-bold text-darkText leading-tight">{dailySuggestion.food.name}</h3>
+                                                <p className="font-body text-[10px] text-gray-500 mt-1 line-clamp-2">{dailySuggestion.food.desc}</p>
+                                                <span className="mt-2 sm:mt-3 font-body font-bold text-primary">{dailySuggestion.food.price}</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="h-[1px] w-full bg-gray-200 my-6"></div>
+
+                                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                                            <div className="flex flex-col text-center sm:text-left">
+                                                <span className="font-body text-[10px] uppercase tracking-widest text-gray-500 mb-1">İkili Menü Fırsatı</span>
+                                                <div className="flex items-center gap-3 justify-center sm:justify-start">
+                                                    {dailySuggestion.totalPrice > dailySuggestion.comboPrice && (
+                                                        <span className="text-xl font-body text-gray-400 line-through decoration-1">{dailySuggestion.totalPrice}₺</span>
+                                                    )}
+                                                    <span className="text-3xl font-heading font-bold text-darkText">{dailySuggestion.comboPrice}₺</span>
+                                                </div>
+                                            </div>
+
+                                            <button onClick={() => { SoundEngine.playClick(); setIsDailyModalOpen(false); }} className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-primary to-primaryDark text-white font-bold rounded-xl text-xs sm:text-sm uppercase tracking-[0.2em] shadow-[0_10px_20px_rgba(232,106,51,0.3)] hover:shadow-[0_12px_25px_rgba(232,106,51,0.4)] hover:-translate-y-0.5 transition-all active:scale-95 flex items-center justify-center gap-2">
+                                                <i data-lucide="check-circle-2" className="w-4 h-4"></i> Harika Fikir!
+                                            </button>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            </div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* SÜRÜKLENEBİLİR JETONLU SLOT MAKİNESİ */}
+                    <AnimatePresence>
+                        {isSlotModalOpen && (
+                            <div className="fixed inset-0 z-50 flex items-center justify-center px-4 overflow-hidden">
+                                <motion.div 
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    onClick={() => { SoundEngine.playClick(); slotState === 'idle' && setIsSlotModalOpen(false); }}
+                                    className="absolute inset-0 bg-black/70 backdrop-blur-md"
+                                />
+                                
+                                <motion.div 
+                                    initial={{ scale: 0.8, opacity: 0, y: 50 }}
+                                    animate={{ scale: 1, opacity: 1, y: 0 }}
+                                    exit={{ scale: 0.8, opacity: 0, y: 50, transition: { duration: 0.3 } }}
+                                    className="relative w-full max-w-[20rem] sm:max-w-[22rem] mx-auto mt-8 sm:mt-0"
+                                >
+                                    {/* --- THE RETRO CABINET --- */}
+                                    <div className="relative z-10 bg-gradient-to-b from-[#FFF5E1] via-[#FDFBF7] to-[#F0E6D2] rounded-[2.5rem] p-4 sm:p-6 shadow-[0_30px_60px_rgba(0,0,0,0.6)] border-[8px] border-white">
+                                        
+                                        <div className="relative -mt-10 sm:-mt-12 mb-6 mx-auto w-[90%] bg-primary rounded-t-[2rem] border-4 border-white py-4 text-center shadow-lg overflow-hidden z-20">
+                                            <div className="absolute inset-0 border-[3px] border-dotted border-white/50 rounded-t-[1.8rem] opacity-70"></div>
+                                            <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -translate-x-full ${slotState === 'spinning' ? 'animate-[shimmer_0.5s_infinite]' : ''}`}></div>
+                                            
+                                            <h2 className="relative z-10 font-heading italic text-3xl sm:text-4xl font-bold text-white drop-shadow-md uppercase tracking-wider">
+                                                KARARSIZ MISIN?
+                                            </h2>
+                                            <div className="flex items-center justify-center gap-2 mt-1 relative z-10">
+                                                <span className="w-8 h-[2px] bg-gradient-to-r from-transparent to-white/70"></span>
+                                                <span className="font-body text-[9px] text-white/90 uppercase tracking-[0.4em] font-bold">SENİN İÇİN SEÇELİM</span>
+                                                <span className="w-8 h-[2px] bg-gradient-to-l from-transparent to-white/70"></span>
+                                            </div>
+                                        </div>
+
+                                        <div className={`absolute top-[90px] sm:top-[100px] bottom-3 sm:bottom-4 left-3 sm:left-4 right-3 sm:right-4 border-[3px] border-dotted rounded-[1.5rem] pointer-events-none transition-all duration-300 z-10 ${
+                                            slotState === 'done' ? 'border-primary animate-pulse' : 
+                                            slotState === 'spinning' ? 'border-primary/60 animate-[spin_10s_linear_infinite]' : 
+                                            slotState === 'need_token' ? 'border-yellow-400/60' : 'border-gray-300'
+                                        }`} style={{ animationDuration: slotState === 'spinning' ? '0.2s' : '0.8s' }}></div>
+
+                                        {/* VIEWPORT & DRAGGABLE TOKENS OVERLAY */}
+                                        <div className="relative z-50 w-full h-[180px] bg-[#F5F0E6] rounded-xl border-4 border-gray-300 shadow-[inset_0_10px_20px_rgba(0,0,0,0.1)] flex p-1.5 sm:p-2 gap-1.5 sm:gap-2">
+                                            
+                                            <AnimatePresence>
+                                                {slotState === 'need_token' && (
+                                                    <motion.div 
+                                                        initial={{ opacity: 0 }}
+                                                        animate={{ opacity: 1 }}
+                                                        exit={{ opacity: 0, scale: 1.1, filter: "blur(5px)" }}
+                                                        className="absolute inset-0 z-40 bg-black/70 backdrop-blur-md flex flex-col items-center justify-center p-2 rounded-lg border-2 border-yellow-500/30"
+                                                    >
+                                                        <motion.span 
+                                                            animate={{ opacity: [1, 0.4, 1] }} 
+                                                            transition={{ duration: 1.5, repeat: Infinity }}
+                                                            className="text-yellow-400 font-body font-extrabold text-[10px] sm:text-xs mb-3 sm:mb-4 tracking-[0.2em] uppercase drop-shadow-[0_0_10px_rgba(250,204,21,0.8)] text-center px-4"
+                                                        >
+                                                            JETONU AŞAĞIDAKİ YUVAYA SÜRÜKLEYİN
+                                                        </motion.span>
+                                                        
+                                                        <div className="flex gap-2 sm:gap-4 px-1">
+                                                            {Jetonlar.map(jeton => (
+                                                                <div key={jeton.id} className="flex flex-col items-center gap-1 sm:gap-2">
+                                                                    <motion.div 
+                                                                        drag
+                                                                        dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
+                                                                        dragElastic={1}
+                                                                        onDragStart={() => { SoundEngine.init(); setIsDraggingToken(true); }}
+                                                                        onDragEnd={(e, info) => handleTokenDrop(e, info, jeton.id)}
+                                                                        whileHover={{ scale: 1.15, rotateZ: 15 }}
+                                                                        whileDrag={{ scale: 1.3, zIndex: 100, cursor: 'grabbing' }}
+                                                                        className={`w-10 h-10 sm:w-14 sm:h-14 coin-base ${jeton.class} cursor-grab transform-gpu z-10 touch-none`}
+                                                                    >
+                                                                        <div className="coin-inner pointer-events-none">
+                                                                            <i data-lucide={jeton.icon} className="w-4 h-4 sm:w-6 sm:h-6 coin-engraving"></i>
+                                                                        </div>
+                                                                    </motion.div>
+                                                                    <span className="text-white/80 text-[8px] sm:text-[9px] uppercase tracking-widest font-bold drop-shadow-md bg-black/50 px-2 py-0.5 rounded border border-white/10 pointer-events-none">{jeton.label}</span>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+
+                                            <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-black/10 to-transparent z-20 pointer-events-none"></div>
+                                            <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/10 to-transparent z-20 pointer-events-none"></div>
+                                            <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/40 to-transparent z-20 pointer-events-none"></div>
+
+                                            <div className="absolute top-1/2 left-0 w-full h-[140px] -translate-y-1/2 z-20 pointer-events-none flex items-center justify-center">
+                                                <div className="w-[96%] h-full border-2 border-primary/30 rounded-lg bg-primary/5 shadow-inner"></div>
+                                            </div>
+
+                                            {reels.map((strip, reelIdx) => (
+                                                <div key={reelIdx} className="relative flex-1 bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
+                                                    <motion.div
+                                                        initial={{ y: 0 }}
+                                                        animate={{ y: (slotState === 'spinning' || slotState === 'done') ? -(TARGET_INDEX * SLOT_ITEM_HEIGHT) : 0 }}
+                                                        transition={{ duration: 3 + (reelIdx * 0.8), ease: [0.15, 0.9, 0.25, 1.1] }}
+                                                        className={`flex flex-col w-full relative z-10 transition-all duration-300 ${slotState === 'spinning' ? 'blur-[1px]' : 'blur-0'}`}
+                                                    >
+                                                        {strip.map((item, idx) => {
+                                                            const isTarget = slotState === 'done' && idx === TARGET_INDEX;
+                                                            return (
+                                                                <div key={idx} className="w-full h-[150px] flex flex-col items-center justify-center p-1 shrink-0">
+                                                                    <div className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 shadow-sm bg-gray-100 transition-all duration-500 ${isTarget ? 'border-primary scale-110 shadow-[0_0_15px_rgba(232,106,51,0.4)]' : 'border-white'}`}>
+                                                                        <img src={item.img} onError={handleImageError} className="w-full h-full object-cover" alt={item.name} />
+                                                                    </div>
+                                                                    <span className={`mt-2 font-heading italic font-bold text-xs sm:text-sm leading-tight tracking-wide text-center line-clamp-2 px-1 ${isTarget ? 'text-primary scale-110' : 'text-gray-800'}`}>
+                                                                        {item.name}
+                                                                    </span>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </motion.div>
+                                                    
+                                                    {slotState === 'done' && (
+                                                        <motion.div 
+                                                            initial={{ opacity: 0 }}
+                                                            animate={{ opacity: [0, 1, 0.5, 1] }}
+                                                            transition={{ duration: 0.8, repeat: 2 }}
+                                                            className="absolute inset-0 rounded-lg border-2 border-primary shadow-[inset_0_0_15px_rgba(232,106,51,0.2)] pointer-events-none z-30"
+                                                        />
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <div className="w-full mt-6 bg-[#FDFBF7] p-4 sm:p-5 rounded-2xl border border-white shadow-[0_10px_30px_rgba(0,0,0,0.1),inset_0_0_10px_rgba(0,0,0,0.05)] relative z-20 flex flex-col gap-4">
+                                            
+                                            {/* YATAY JETON YUVASI */}
+                                            <div className="flex flex-col items-center -mt-2 mb-1 relative z-30">
+                                                <div 
+                                                    ref={coinSlotRef}
+                                                    className={`relative w-28 h-8 bg-gradient-to-b from-gray-300 to-gray-500 rounded-lg border-2 border-gray-400 shadow-[inset_0_2px_5px_rgba(0,0,0,0.3),0_5px_10px_rgba(0,0,0,0.3)] flex items-center justify-center transition-all duration-300 ${isDraggingToken ? 'shadow-[0_0_25px_#EAB308] border-yellow-400 scale-110' : ''}`}
+                                                >
+                                                    <div className={`w-20 h-1.5 rounded-full shadow-[inset_0_5px_10px_rgba(0,0,0,1)] transition-all duration-300 ${slotState === 'need_token' ? 'bg-yellow-800 shadow-[0_0_15px_#EAB308,inset_0_5px_10px_rgba(0,0,0,1)]' : 'bg-black'}`}></div>
+                                                    
+                                                    <AnimatePresence>
+                                                        {(slotState === 'need_token' && !isDraggingToken) && (
+                                                            <motion.div 
+                                                                initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                                                                className="absolute bottom-full mb-1 flex flex-col items-center pointer-events-none"
+                                                            >
+                                                                <span className="text-yellow-600 font-bold text-[9px] sm:text-[10px] uppercase tracking-widest bg-white/90 px-2 py-0.5 rounded shadow-sm border border-yellow-200">Buraya At</span>
+                                                                <i data-lucide="arrow-down" className="w-3 h-3 text-yellow-600 animate-bounce"></i>
+                                                            </motion.div>
+                                                        )}
+                                                    </AnimatePresence>
+                                                </div>
+                                            </div>
+
+                                            <div className="w-full bg-[#1A1A1A] h-12 rounded-xl border-[3px] border-gray-300 shadow-[inset_0_5px_15px_rgba(0,0,0,1)] flex items-center justify-center relative overflow-hidden">
+                                                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyIiBoZWlnaHQ9IjIiPgo8cmVjdCB3aWR0aD0iMiIgaGVpZ2h0PSIxIiBmaWxsPSIjMTExIiAvPgo8L3N2Zz4=')] opacity-20 pointer-events-none"></div>
+                                                <div className={`absolute inset-0 bg-primary/10 transition-opacity duration-300 ${slotState === 'done' ? 'opacity-100' : 'opacity-0'}`}></div>
+                                                <span className={`font-body font-medium text-[10px] sm:text-xs tracking-[0.2em] uppercase drop-shadow-[0_0_8px_currentColor] z-10 ${
+                                                    slotState === 'need_token' ? 'text-yellow-400 font-bold' :
+                                                    slotState === 'idle' ? 'text-[#4ade80] animate-pulse font-bold' : 
+                                                    slotState === 'spinning' ? 'text-[#facc15]' : 'text-primary font-bold animate-bounce'
+                                                }`}>
+                                                    {slotState === 'need_token' ? 'JETON SÜRÜKLEYİN' : 
+                                                     slotState === 'idle' ? 'SİSTEM HAZIR. BUTONA BAS!' : 
+                                                     slotState === 'spinning' ? 'SEÇİLİYOR...' : 'AFİYET OLSUN!'}
+                                                </span>
+                                            </div>
+
+                                            {/* ATARİ STİLİ FİZİKSEL BUTONLAR */}
+                                            <div className="flex items-center justify-around gap-2 mt-4 mb-2">
+                                                {/* İPTAL BUTONU (KIRMIZI) */}
+                                                <div className="flex flex-col items-center">
+                                                    <div className="p-2 rounded-full bg-gradient-to-b from-[#2A2A2A] to-[#1A1A1A] shadow-[inset_0_4px_8px_rgba(0,0,0,0.8),0_2px_4px_rgba(255,255,255,0.1)]">
+                                                        <button 
+                                                            onClick={() => { SoundEngine.playClick(); (slotState === 'idle' || slotState === 'need_token') && setIsSlotModalOpen(false); }}
+                                                            disabled={slotState === 'spinning'}
+                                                            className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-full transition-all duration-150 flex items-center justify-center outline-none border-2 border-red-900/50 ${
+                                                                (slotState === 'idle' || slotState === 'need_token') 
+                                                                ? 'bg-gradient-to-b from-red-400 to-red-600 shadow-[0_6px_0_#7f1d1d,0_10px_15px_rgba(0,0,0,0.5),inset_0_4px_8px_rgba(255,255,255,0.5)] active:shadow-[0_0px_0_#7f1d1d,0_0px_0px_rgba(0,0,0,0.5),inset_0_2px_4px_rgba(255,255,255,0.4)] active:translate-y-[6px] cursor-pointer hover:from-red-300 hover:to-red-500 hover:brightness-110' 
+                                                                : 'bg-gradient-to-b from-red-800 to-red-900 shadow-[0_2px_0_#450a0a] translate-y-[4px] cursor-not-allowed opacity-80'
+                                                            }`}
+                                                        >
+                                                            <span className="font-body font-bold text-white text-[9px] sm:text-[10px] tracking-widest uppercase drop-shadow-md">İptal</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                {/* ÇEVİR BUTONU (YEŞİL) */}
+                                                <div className="flex flex-col items-center">
+                                                    <div className="p-2.5 rounded-full bg-gradient-to-b from-[#2A2A2A] to-[#1A1A1A] shadow-[inset_0_4px_10px_rgba(0,0,0,0.8),0_2px_4px_rgba(255,255,255,0.1)]">
+                                                        <button 
+                                                            onClick={handleSpin}
+                                                            disabled={slotState !== 'idle'}
+                                                            className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-full transition-all duration-150 flex items-center justify-center outline-none border-2 border-green-900/50 ${
+                                                                slotState === 'idle' 
+                                                                ? 'bg-gradient-to-b from-green-400 to-green-600 shadow-[0_8px_0_#14532d,0_15px_20px_rgba(0,0,0,0.5),inset_0_6px_12px_rgba(255,255,255,0.5)] active:shadow-[0_0px_0_#14532d,0_0px_0px_rgba(0,0,0,0.5),inset_0_3px_5px_rgba(255,255,255,0.4)] active:translate-y-[8px] cursor-pointer hover:from-green-300 hover:to-green-500 hover:brightness-110' 
+                                                                : 'bg-gradient-to-b from-green-800 to-green-900 shadow-[0_2px_0_#052e16] translate-y-[6px] cursor-not-allowed opacity-80'
+                                                            }`}
+                                                        >
+                                                            <span className="font-heading italic font-bold text-white text-xl sm:text-2xl drop-shadow-md">ÇEVİR</span>
+                                                            <AnimatePresence>
+                                                                {slotState === 'idle' && (
+                                                                    <motion.div 
+                                                                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} 
+                                                                        className="absolute -top-10 left-1/2 -translate-x-1/2 pointer-events-none animate-bounce"
+                                                                    >
+                                                                        <i data-lucide="arrow-down" className="w-6 h-6 text-green-500 drop-shadow-md filter drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]"></i>
+                                                                    </motion.div>
+                                                                )}
+                                                            </AnimatePresence>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                                
+                                {slotState === 'done' && (
+                                    <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-[100] overflow-hidden">
+                                        {[...Array(60)].map((_, i) => {
+                                            const angle = (i / 60) * Math.PI * 2;
+                                            const velocity = 300 + Math.random() * 400;
+                                            const colors = ['bg-primary', 'bg-white', 'bg-orange-300', 'bg-yellow-200'];
+                                            const bgColor = colors[i % colors.length];
+                                            return (
+                                                <motion.div
+                                                    key={i}
+                                                    initial={{ opacity: 1, scale: 0, x: 0, y: 0, rotate: 0 }}
+                                                    animate={{ 
+                                                        opacity: [1, 1, 0], scale: Math.random() * 1.5 + 0.5,
+                                                        x: Math.cos(angle) * velocity, y: (Math.sin(angle) * velocity) + (Math.random() * 500), 
+                                                        rotate: Math.random() * 720
+                                                    }}
+                                                    transition={{ duration: 2.5, ease: "easeOut" }}
+                                                    className={`absolute w-3 h-3 md:w-4 md:h-4 rounded-sm sm:rounded-full ${bgColor} shadow-sm`}
+                                                />
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* ITEM DETAIL MODAL */}
+                    <AnimatePresence>
+                        {selectedItem && (
+                            <div className="fixed inset-0 z-50 flex items-end justify-center px-0">
+                                <motion.div 
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    onClick={() => { SoundEngine.playClick(); setSelectedItem(null); }}
+                                    className="absolute inset-0 bg-black/40 backdrop-blur-md"
+                                />
+                                <motion.div
+                                    initial={{ y: "100%" }}
+                                    animate={{ y: 0 }}
+                                    exit={{ y: "100%" }}
+                                    transition={{ type: "spring", damping: 32, stiffness: 300 }}
+                                    drag="y"
+                                    dragConstraints={{ top: 0, bottom: 0 }}
+                                    dragElastic={{ top: 0, bottom: 0.5 }}
+                                    onDragEnd={(_, info) => {
+                                        if (info.offset.y > 120 || info.velocity.y > 500) {
+                                            SoundEngine.playClick();
+                                            setSelectedItem(null);
+                                        }
+                                    }}
+                                    className="relative w-full max-w-2xl bg-cream rounded-t-[2.5rem] overflow-hidden shadow-[0_-20px_50px_rgba(0,0,0,0.2)] flex flex-col max-h-[90vh]"
+                                >
+                                    <div className="w-full pt-3 pb-2 flex justify-center cursor-grab active:cursor-grabbing touch-none shrink-0">
+                                        <div className="w-12 h-1.5 bg-gray-300 rounded-full"></div>
+                                    </div>
+                                    
+                                    <div className="overflow-y-auto no-scrollbar p-6 pt-2 pb-10">
+                                        <div className="relative w-full aspect-video rounded-[2rem] overflow-hidden mb-6 shadow-md shrink-0 bg-gray-200">
+                                            <img src={selectedItem.imgWide || selectedItem.img} onError={handleImageError} className="w-full h-full object-cover" alt={selectedItem.name} />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                                        </div>
+
+                                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+                                            <div className="flex justify-between items-end mb-4">
+                                                <div className="flex-1 pr-4">
+                                                    <h2 className="font-heading text-4xl md:text-5xl italic font-bold text-darkText mb-3 leading-none">{selectedItem.name}</h2>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {selectedItem.tags.map(t => (
+                                                            <span key={t} className="px-3 py-1 bg-primary/10 border border-primary/20 rounded-full text-[9px] uppercase tracking-widest text-primary font-bold">{t}</span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                                <div className="text-3xl font-bold text-primary shrink-0">{selectedItem.price}</div>
+                                            </div>
+
+                                            <div className="h-[1px] w-full bg-gray-200 my-6"></div>
+
+                                            <p className="font-body text-base md:text-lg text-gray-600 font-light leading-relaxed mb-8 italic">
+                                                "{selectedItem.desc}"
+                                            </p>
+
+                                            <button 
+                                                onClick={() => { SoundEngine.playClick(); setSelectedItem(null); }}
+                                                className="w-full py-4 bg-primary text-white font-bold rounded-2xl text-sm uppercase tracking-[0.2em] shadow-[0_10px_20px_rgba(232,106,51,0.3)] transition-transform active:scale-95"
+                                            >
+                                                Kapat
+                                            </button>
+                                        </motion.div>
+                                    </div>
+                                </motion.div>
+                            </div>
+                        )}
+                    </AnimatePresence>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 </body>
 </html>
-

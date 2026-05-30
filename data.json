@@ -1,0 +1,996 @@
+{
+  "Sıcak Kahveler": [
+    {
+      "name": "Latte",
+      "price": "120₺",
+      "desc": "Özenle çekilmiş taze espresso ve ipeksi sıcak süt köpüğünün yumuşak buluşması.",
+      "img": "images/latte-1779717018296-square.jpg",
+      "imgWide": "images/latte-1779717018296-wide.jpg",
+      "tags": [
+        "Sütlü",
+        "Yumuşak İçim"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Mocha",
+      "price": "165₺",
+      "desc": "Espresso, sıcak süt ve premium çikolatanın tatlı uyumu.",
+      "img": "images/mocha-1779717641954-square.jpg",
+      "imgWide": "images/mocha-1779717641954-wide.jpg",
+      "tags": [
+        "Çikolatalı",
+        "Tatlı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "White Chocolate Mocha",
+      "price": "165₺",
+      "desc": "Beyaz çikolata tutkunları için espresso ve sütün özel reçetesi.",
+      "img": "images/white-choc-mocha-1779717663279-square.jpg",
+      "imgWide": "images/white-choc-mocha-1779717663279-wide.jpg",
+      "tags": [
+        "Beyaz Çikolatalı",
+        "Tatlı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Caramel Macchiato",
+      "price": "140₺",
+      "desc": "Vanilya şurubu, sıcak süt ve espressonun karamel sos ile taçlandırılmış hali.",
+      "img": "images/caramel-macchiato-1779717681618-square.jpg",
+      "imgWide": "images/caramel-macchiato-1779717681618-wide.jpg",
+      "tags": [
+        "Karamelli",
+        "Popüler"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Toffee Nut Latte",
+      "price": "165₺",
+      "desc": "Kavrulmuş fındık ve karamel notalarıyla zenginleştirilmiş latte deneyimi.",
+      "img": "images/toffee-nut-latte-1779717703379-square.jpg",
+      "imgWide": "images/toffee-nut-latte-1779717703379-wide.jpg",
+      "tags": [
+        "Fındıklı",
+        "Aromalı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Cappuccino",
+      "price": "140₺",
+      "desc": "Eşit oranda espresso, sıcak süt ve yoğun süt köpüğü.",
+      "img": "images/cappuccino-1779717721121-square.jpg",
+      "imgWide": "images/cappuccino-1779717721121-wide.jpg",
+      "tags": [
+        "Klasik",
+        "Köpüklü"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Cortado",
+      "price": "130₺",
+      "desc": "Espresso ve asiditesini dengeleyecek kadar az miktarda ılık süt.",
+      "img": "images/cortado-1779717740055-square.jpg",
+      "imgWide": "images/cortado-1779717740055-wide.jpg",
+      "tags": [
+        "Sert",
+        "Yoğun"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Flat White",
+      "price": "140₺",
+      "desc": "İki shot ristretto üzerine ince formlu ipeksi süt.",
+      "img": "images/flat-white-1779717757344-square.jpg",
+      "imgWide": "images/flat-white-1779717757344-wide.jpg",
+      "tags": [
+        "Sert",
+        "Kremamsı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Americano",
+      "price": "140₺",
+      "desc": "İmza espresso çekirdeklerimizin sıcak su ile dengelenmiş ferah içimi.",
+      "img": "images/americano-1779717773254-square.jpg",
+      "imgWide": "images/americano-1779717773254-wide.jpg",
+      "tags": [
+        "Sütsüz",
+        "Sert"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Filtre Kahve",
+      "price": "140₺",
+      "desc": "Günün yorgunluğunu alan, taze demlenmiş dengeli filtre kahve.",
+      "img": "images/filtre-kahve-1779717801086-square.jpg",
+      "imgWide": "images/filtre-kahve-1779717801086-wide.jpg",
+      "tags": [
+        "Sütsüz",
+        "Dengeli"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Espresso",
+      "price": "110₺",
+      "desc": "Tek shot, yoğun gövdeli ve zengin kremalı espresso.",
+      "img": "images/espresso-1779717820305-square.jpg",
+      "imgWide": "images/espresso-1779717820305-wide.jpg",
+      "tags": [
+        "Çok Sert",
+        "Sütsüz"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Double Espresso",
+      "price": "120₺",
+      "desc": "Gerçek kahve tutkunları için çift shot espresso.",
+      "img": "images/double-espresso-1779717837350-square.jpg",
+      "imgWide": "images/double-espresso-1779717837350-wide.jpg",
+      "tags": [
+        "Çok Sert",
+        "Sütsüz"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Türk Kahvesi",
+      "price": "95₺",
+      "desc": "Geleneksel usulle ağır ağır pişirilmiş bol köpüklü Türk Kahvesi.",
+      "img": "images/turk-kahvesi-1779717864393-square.jpg",
+      "imgWide": "images/turk-kahvesi-1779717864393-wide.jpg",
+      "tags": [
+        "Geleneksel",
+        "Sütsüz"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Sıcak Çikolata",
+      "price": "140₺",
+      "desc": "Yoğun çikolata kıvamı ve buharla ısıtılmış sıcak süt.",
+      "img": "images/sicak-cikolata-1779717883722-square.jpg",
+      "imgWide": "images/sicak-cikolata-1779717883722-wide.jpg",
+      "tags": [
+        "Kahvesiz",
+        "Tatlı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Belgian Chocolate",
+      "price": "200₺",
+      "desc": "Orijinal Belçika çikolatasının eritilmesiyle hazırlanan lezzet.",
+      "img": "images/belgian-chocolate-1779717899309-square.jpg",
+      "imgWide": "images/belgian-chocolate-1779717899309-wide.jpg",
+      "tags": [
+        "Premium",
+        "Kahvesiz"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Salep",
+      "price": "140₺",
+      "desc": "Tarçın serpilmiş, içinizi ısıtacak geleneksel kış içeceği.",
+      "img": "images/salep-1779717915302-square.jpg",
+      "imgWide": "images/salep-1779717915302-wide.jpg",
+      "tags": [
+        "Kış İçeceği",
+        "Geleneksel"
+      ],
+      "isActive": true
+    }
+  ],
+  "Soğuk Kahveler": [
+    {
+      "name": "Ice Latte",
+      "price": "140₺",
+      "desc": "Buzlu sütün taze çekilmiş espresso ile ferahlatıcı buluşması.",
+      "img": "images/ice-latte-1779718021275-square.jpg",
+      "imgWide": "images/ice-latte-1779718021275-wide.jpg",
+      "tags": [
+        "Soğuk",
+        "Sütlü"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ice Mocha",
+      "price": "165₺",
+      "desc": "Buz, soğuk süt, espresso ve çikolatanın tatlı serinliği.",
+      "img": "images/ice-mocha-1779718058365-square.jpg",
+      "imgWide": "images/ice-mocha-1779718058365-wide.jpg",
+      "tags": [
+        "Soğuk",
+        "Çikolatalı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ice White Chocolate Mocha",
+      "price": "165₺",
+      "desc": "Beyaz çikolata ile tatlandırılmış buzlu espresso deneyimi.",
+      "img": "images/ice-w-choco-mocha-1779718080940-square.jpg",
+      "imgWide": "images/ice-w-choco-mocha-1779718080940-wide.jpg",
+      "tags": [
+        "Soğuk",
+        "Tatlı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ice Caramel Macchiato",
+      "price": "165₺",
+      "desc": "Karamel sos ve vanilyanın espresso ile buzlu uyumu.",
+      "img": "images/ice-caramel-macchiato-1779718101503-square.jpg",
+      "imgWide": "images/ice-caramel-macchiato-1779718101503-wide.jpg",
+      "tags": [
+        "Karamelli",
+        "Ferah"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ice Toffee Nut Latte",
+      "price": "165₺",
+      "desc": "Fındık ve karamel şekerlemesi notalarının buzla birleştiği ferahlatıcı lezzet.",
+      "img": "images/ice-toffee-nut-1779718125247-square.jpg",
+      "imgWide": "images/ice-toffee-nut-1779718125247-wide.jpg",
+      "tags": [
+        "Soğuk",
+        "Aromalı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ice Flat White",
+      "price": "165₺",
+      "desc": "Yoğun kahve tadı arayanlara özel, soğuk sütle buluşan kadifemsi tat",
+      "img": "images/ice-flat-white-1779718143683-square.jpg",
+      "imgWide": "images/ice-flat-white-1779718143683-wide.jpg",
+      "tags": [
+        "Sert",
+        "Soğuk"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ice Americano",
+      "price": "150₺",
+      "desc": "Su ve buz ile inceltilmiş, serinletici saf espresso deneyimi.",
+      "img": "images/ice-americano-1779718163437-square.jpg",
+      "imgWide": "images/ice-americano-1779718163437-wide.jpg",
+      "tags": [
+        "Sütsüz",
+        "Ferah"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Frappuccino",
+      "price": "165₺",
+      "desc": "Buzla harmanlanmış kıvamlı ve tatlı kahve molası.",
+      "img": "images/frappuccino-1779718184389-square.jpg",
+      "imgWide": "images/frappuccino-1779718184389-wide.jpg",
+      "tags": [
+        "Frappe",
+        "Tatlı"
+      ],
+      "isActive": false
+    }
+  ],
+  "Special Kahveler": [
+    {
+      "name": "Lotus Latte",
+      "price": "165₺",
+      "desc": "Karamelize Lotus bisküvi kreması ile hazırlanan imza kahvemiz.",
+      "img": "images/lotus-latte-1779720732727-square.jpg",
+      "imgWide": "images/lotus-latte-1779720732727-wide.jpg",
+      "tags": [
+        "İmza",
+        "Tatlı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Nutella Mocha",
+      "price": "165₺",
+      "desc": "Gerçek Nutella ile hazırlanan yoğun çikolatalı mocha.",
+      "img": "images/nutella-mocha-1779720879023-square.jpg",
+      "imgWide": "images/nutella-mocha-1779720879023-wide.jpg",
+      "tags": [
+        "Nutella",
+        "Yoğun"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Pumpkin Spice",
+      "price": "165₺",
+      "desc": "Bal kabağı ve kış baharatlarının espresso ile eşsiz uyumu.",
+      "img": "images/pumpkin-spice-1779720907676-square.jpg",
+      "imgWide": "images/pumpkin-spice-1779720907676-wide.jpg",
+      "tags": [
+        "Baharatlı",
+        "Kışa Özel"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Fındık-Çikolate Latte",
+      "price": "165₺",
+      "desc": "Fındık ve çikolata şurubu ile zenginleştirilmiş yumuşak içim.",
+      "img": "images/findik-ciko-latte-1779720937552-square.jpg",
+      "imgWide": "images/findik-ciko-latte-1779720937552-wide.jpg",
+      "tags": [
+        "Tatlı",
+        "Fındıklı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "ChocolateBerry Latte",
+      "price": "165₺",
+      "desc": "Raspberry ve çikolata notalarının sıradışı espresso uyumu.",
+      "img": "images/chocoberry-latte-1779720959513-square.jpg",
+      "imgWide": "images/chocoberry-latte-1779720959513-wide.jpg",
+      "tags": [
+        "Meyveli",
+        "İmza"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Süt Reçelli Latte",
+      "price": "165₺",
+      "desc": "Karamelize süt reçeli ile hazırlanan, damakta iz bırakan lezzet.",
+      "img": "images/sut-recelli-latte-1779720995039-square.jpg",
+      "imgWide": "images/sut-recelli-latte-1779720995039-wide.jpg",
+      "tags": [
+        "Karamelize",
+        "Yumuşak"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Cocostar Latte",
+      "price": "165₺",
+      "desc": "Hindistan cevizi ve çikolatanın tropikal kahve deneyimi.",
+      "img": "images/cocostar-latte-1779721027865-square.jpg",
+      "imgWide": "images/cocostar-latte-1779721027865-wide.jpg",
+      "tags": [
+        "Hindistan Cevizi",
+        "Tatlı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Kinder Espresso",
+      "price": "140₺",
+      "desc": "Kinder çikolata bazlı, yoğun ve tatlı özel espresso shot.",
+      "img": "images/kinder-espresso-1779721054380-square.jpg",
+      "imgWide": "images/kinder-espresso-1779721054380-wide.jpg",
+      "tags": [
+        "Tatlı",
+        "Shot"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Matcha Latte",
+      "price": "175₺",
+      "desc": "Premium Japon matcha çayı ve sıcak sütün antioksidan deposu hali.",
+      "img": "images/matcha-latte-1779721079969-square.jpg",
+      "imgWide": "images/matcha-latte-1779721079969-wide.jpg",
+      "tags": [
+        "Sağlıklı",
+        "Yeşil Çay"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "V60",
+      "price": "165₺",
+      "desc": "Özel filtreleme yöntemiyle demlenen berrak ve aromatik 3. nesil kahve.",
+      "img": "images/v60-1779721110533-square.jpg",
+      "imgWide": "images/v60-1779721110533-wide.jpg",
+      "tags": [
+        "3. Nesil",
+        "Sütsüz"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Chemex",
+      "price": "165₺",
+      "desc": "Kalın kağıt filtre ile demlenen pürüzsüz ve yumuşak içimli filtre kahve.",
+      "img": "images/chemex-1779721134756-square.jpg",
+      "imgWide": "images/chemex-1779721134756-wide.jpg",
+      "tags": [
+        "Dengeli",
+        "Berrak"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Cold Brew",
+      "price": "180₺",
+      "desc": "16 saat soğuk suda demlenerek hazırlanan, buzlu filtre kahve.",
+      "img": "images/cold-brew-1779721154141-square.jpg",
+      "imgWide": "images/cold-brew-1779721154141-wide.jpg",
+      "tags": [
+        "Yüksek Kafein",
+        "Sert"
+      ],
+      "isActive": true
+    }
+  ],
+  "Soğuk Special": [
+    {
+      "name": "Ice FikaMint",
+      "price": "175₺",
+      "desc": "Fika'ya özel taze nane ve espressonun buzlu ferahlığı.",
+      "img": "images/ice-fikamint-1780150694660-square.jpg",
+      "imgWide": "images/ice-fikamint-1780150694660-wide.jpg",
+      "tags": [
+        "Ferahlatıcı",
+        "İmza"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ice Fındık Çikolata Latte",
+      "price": "175₺",
+      "desc": "Buzlu süt, çikolata ve fındığın eşsiz yaz lezzeti.",
+      "img": "images/ice-findik-ciko-1779721822231-square.jpg",
+      "imgWide": "images/ice-findik-ciko-1779721822231-wide.jpg",
+      "tags": [
+        "Tatlı",
+        "Soğuk"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ice ChocolateBerry Latte",
+      "price": "175₺",
+      "desc": "Raspberry ve çikolata notalarının buz gibi espresso ile buluşması.",
+      "img": "images/ice-chocoberry-1779721840604-square.jpg",
+      "imgWide": "images/ice-chocoberry-1779721840604-wide.jpg",
+      "tags": [
+        "Meyveli",
+        "Buzlu"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ice Pumpkin Spice Latte",
+      "price": "175₺",
+      "desc": "Bal kabağı baharatlarının serinletici yaz versiyonu.",
+      "img": "images/ice-pumpkin-spice-1779721865245-square.jpg",
+      "imgWide": "images/ice-pumpkin-spice-1779721865245-wide.jpg",
+      "tags": [
+        "Aromalı",
+        "Soğuk"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ice Spanish Latte",
+      "price": "175₺",
+      "desc": "Yoğunlaştırılmış süt ve espresso'nun buzlu uyumu.",
+      "img": "images/ice-spanish-latte-1779721888084-square.jpg",
+      "imgWide": "images/ice-spanish-latte-1779721888084-wide.jpg",
+      "tags": [
+        "Kremamsı",
+        "Tatlı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Berryz",
+      "price": "175₺",
+      "desc": "Hibiscus ve Raspberry özleriyle hazırlanan serinletici lezzet",
+      "img": "images/berryz-1779721917178-square.jpg",
+      "imgWide": "images/berryz-1779721917178-wide.jpg",
+      "tags": [
+        "Kahvesiz",
+        "Meyveli"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Orange Mango",
+      "price": "175₺",
+      "desc": "Portakal ve mangonun tropikal ve ferah buzlu karışımı.",
+      "img": "images/orange-mango-1779721941625-square.jpg",
+      "imgWide": "images/orange-mango-1779721941625-wide.jpg",
+      "tags": [
+        "Tropikal",
+        "Ferah"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Cool Lime",
+      "price": "175₺",
+      "desc": "Misket limonu ve taze nane özleriyle sarsıcı ferahlık.",
+      "img": "images/cool-lime-1779721968682-square.jpg",
+      "imgWide": "images/cool-lime-1779721968682-wide.jpg",
+      "tags": [
+        "Çok Ferah",
+        "Kahvesiz"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Blues",
+      "price": "175₺",
+      "desc": "Mavi portakal ve özel şuruplarla hazırlanan bir serinlik.",
+      "img": "images/blues-1779721991801-square.jpg",
+      "imgWide": "images/blues-1779721991801-wide.jpg",
+      "tags": [
+        "Özel",
+        "Meyveli"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "BerryLime",
+      "price": "175₺",
+      "desc": "Misket limonu ferahlığı, hibiscus ve Raspberry’nin mükemmel uyumu.",
+      "img": "images/berrylime-1779722019175-square.jpg",
+      "imgWide": "images/berrylime-1779722019175-wide.jpg",
+      "tags": [
+        "Ekşi",
+        "Tatlı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Black Berryz",
+      "price": "175₺",
+      "desc": "Böğürtlenin yoğun tadını hissedeceğiniz buz gibi special.",
+      "img": "images/black-berryz-1779722044884-square.jpg",
+      "imgWide": "images/black-berryz-1779722044884-wide.jpg",
+      "tags": [
+        "Böğürtlen",
+        "Yoğun"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ice Matcha Latte",
+      "price": "185₺",
+      "desc": "Buzlu süt ve premium Japon matcha çayının ferahlatıcı dengesi. \nStrawberry, vanilla, Muz-Lavanta seçenekleriyle sizinle",
+      "img": "images/ice-matcha-latte-1779722067704-square.jpg",
+      "imgWide": "images/ice-matcha-latte-1779722067704-wide.jpg",
+      "tags": [
+        "Sağlıklı",
+        "Yeşil Çay"
+      ],
+      "isActive": true
+    }
+  ],
+  "Bitki Çayları": [
+    {
+      "name": "Cold 911",
+      "price": "135₺",
+      "desc": "Portakal ve okaliptüsün boğazı rahatlatan şifalı harmanı.",
+      "img": "images/cold-911-1779722341303-square.jpg",
+      "imgWide": "images/cold-911-1779722341303-wide.jpg",
+      "tags": [
+        "Şifalı",
+        "Kışa Özel"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Cloud Catcher",
+      "price": "135₺",
+      "desc": "Kivi ve kiraz parçacıklı, meyvemsi ve tatlı bitki çayı.",
+      "img": "images/cloud-catcher-1779722371583-square.jpg",
+      "imgWide": "images/cloud-catcher-1779722371583-wide.jpg",
+      "tags": [
+        "Meyveli",
+        "Tatlı İçim"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Friends",
+      "price": "135₺",
+      "desc": "Mango ve çileğin dostça buluştuğu sıcacık ve neşeli bir çay.",
+      "img": "images/friends-1779722396046-square.jpg",
+      "imgWide": "images/friends-1779722396046-wide.jpg",
+      "tags": [
+        "Tropikal",
+        "Yumuşak"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Lady Tea",
+      "price": "135₺",
+      "desc": "Çilek ve ananasın zarif uyumu, hafif ve aromatik bir deneyim.",
+      "img": "images/lady-tea-1779722423201-square.jpg",
+      "imgWide": "images/lady-tea-1779722423201-wide.jpg",
+      "tags": [
+        "Zarif",
+        "Meyveli"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Creamy Jasmine",
+      "price": "135₺",
+      "desc": "Yasemin çiçekleri, vanilya ve beyaz çayın kremamsı şıklığı.",
+      "img": "images/creamy-jasmine-1779722447880-square.jpg",
+      "imgWide": "images/creamy-jasmine-1779722447880-wide.jpg",
+      "tags": [
+        "Beyaz Çay",
+        "Vanilyalı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Kış Çayı",
+      "price": "120₺",
+      "desc": "Soğuk günlerin vazgeçilmezi bağışıklık dostu baharatlı harman.",
+      "img": "images/kis-cayi-1779722470039-square.jpg",
+      "imgWide": "images/kis-cayi-1779722470039-wide.jpg",
+      "tags": [
+        "Baharatlı",
+        "Sıcak"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ada Çayı",
+      "price": "120₺",
+      "desc": "Doğal yaprak adaçayı, sakinleştirici ve dinlendirici.",
+      "img": "images/ada-cayi-1779722490011-square.jpg",
+      "imgWide": "images/ada-cayi-1779722490011-wide.jpg",
+      "tags": [
+        "Doğal",
+        "Sakinleştirici"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Papatya Çayı",
+      "price": "120₺",
+      "desc": "Günün stresini alan yumuşak içimli doğal papatya çiçeği.",
+      "img": "images/papatya-cayi-1779722514228-square.jpg",
+      "imgWide": "images/papatya-cayi-1779722514228-wide.jpg",
+      "tags": [
+        "Sakinleştirici",
+        "Yumuşak"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Yeşil Çay",
+      "price": "120₺",
+      "desc": "Yüksek antioksidan içeren, tazelik veren saf yeşil çay.",
+      "img": "images/yesil-cay-1779722560147-square.jpg",
+      "imgWide": "images/yesil-cay-1779722560147-wide.jpg",
+      "tags": [
+        "Detoks",
+        "Doğal"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Hibiscus Çayı",
+      "price": "120₺",
+      "desc": "Mayhoş tadı ve yakut kırmızısı rengiyle ferahlatıcı ebegümeci.",
+      "img": "images/hibiscus-cayi-1779722586533-square.jpg",
+      "imgWide": "images/hibiscus-cayi-1779722586533-wide.jpg",
+      "tags": [
+        "Mayhoş",
+        "C Vitamini"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Siyah Çay",
+      "price": "45₺",
+      "desc": "İnce belli bardakta sunulan, taze demlenmiş geleneksel Türk çayı.",
+      "img": "images/siyah-cay-1779722614741-square.jpg",
+      "imgWide": "images/siyah-cay-1779722614741-wide.jpg",
+      "tags": [
+        "Geleneksel",
+        "Klasik"
+      ],
+      "isActive": true
+    }
+  ],
+  "Pastalar": [
+    {
+      "name": "Fika Bowl Tabağı",
+      "price": "320₺",
+      "desc": "Tabanında kakaolu kek, üzerinde pastacı kreması, arasında çilek, muz, üzerine belçika çikolatası ve krep kırığı ile sevis edilir",
+      "img": "images/fika-bowl-tabagi-1780152007839-square.jpg",
+      "imgWide": "images/fika-bowl-tabagi-1780152007839-wide.jpg",
+      "tags": [],
+      "isActive": false
+    },
+    {
+      "name": "Cream Puff",
+      "price": "285₺",
+      "desc": "Dışı çıtır choux hamuru, içinde çikolata ve pastacı kremasıyla kahvenizin lezzetli eşlikçisi",
+      "img": "images/cream-puff-1780151182456-square.jpg",
+      "imgWide": "images/cream-puff-1780151182456-wide.jpg",
+      "tags": [],
+      "isActive": true
+    },
+    {
+      "name": "Ada LOVE",
+      "price": "285₺",
+      "desc": "Fika'nın imza pastası, yoğun çikolata ve özel kremanın muazzam uyumu.",
+      "img": "images/ada-love-1779726425981-square.jpg",
+      "imgWide": "images/ada-love-1779726425981-wide.jpg",
+      "tags": [
+        "İmza",
+        "Premium"
+      ],
+      "isActive": false
+    },
+    {
+      "name": "Pavlova",
+      "price": "285₺",
+      "desc": "Dışı çıtır, içi marshmallow kıvamında taze meyveli beze tatlısı.",
+      "img": "images/pavlova-1779723830931-square.jpg",
+      "imgWide": "images/pavlova-1779723830931-wide.jpg",
+      "tags": [
+        "Hafif",
+        "Meyveli"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Brownie Caramel",
+      "price": "285₺",
+      "desc": "Altı brownie, üstü yoğun peynir kreması ve akışkan karamel sos.",
+      "img": "images/brownie-caramel-1779722970341-square.jpg",
+      "imgWide": "images/brownie-caramel-1779722970341-wide.jpg",
+      "tags": [
+        "Çok Tatlı",
+        "Karamelli"
+      ],
+      "isActive": false
+    },
+    {
+      "name": "Lotus Cake",
+      "price": "285₺",
+      "desc": "Karamelize bisküvi tabanı ve Lotus kremasıyla kaplanmış şaheser.",
+      "img": "images/lotus-cake-1779722993318-square.jpg",
+      "imgWide": "images/lotus-cake-1779722993318-wide.jpg",
+      "tags": [
+        "Popüler",
+        "Bisküvili"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Fıstık Rüyası",
+      "price": "285₺",
+      "desc": "Boz iç Antep fıstığı dolgulu ve çikolata kaplı özel pasta.",
+      "img": "images/fistik-ruyasi-1779723021120-square.jpg",
+      "imgWide": "images/fistik-ruyasi-1779723021120-wide.jpg",
+      "tags": [
+        "Fıstıklı",
+        "Yoğun"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Frambuaz Cheesecake",
+      "price": "285₺",
+      "desc": "Taze frambuaz sosu ile hazırlanan klasik New York usulü cheesecake.",
+      "img": "images/frambuaz-cheesecake-1779723041540-square.jpg",
+      "imgWide": "images/frambuaz-cheesecake-1779723041540-wide.jpg",
+      "tags": [
+        "Ekşi-Tatlı",
+        "Klasik"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Sufle",
+      "price": "285₺",
+      "desc": "İçi akışkan sıcak çikolatalı, isteğe bağlı dondurma ile servis edilen sufle.",
+      "img": "images/sufle-1779723121254-square.jpg",
+      "imgWide": "images/sufle-1779723121254-wide.jpg",
+      "tags": [
+        "Sıcak Tatlı",
+        "Çikolatalı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Tiramisu",
+      "price": "285₺",
+      "desc": "Espresso ile ıslatılmış kedi dili ve orijinal mascarpone kreması.",
+      "img": "images/tiramisu-1779723180018-square.jpg",
+      "imgWide": "images/tiramisu-1779723180018-wide.jpg",
+      "tags": [
+        "Kahveli",
+        "İtalyan"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "BlueBerry Cake",
+      "price": "285₺",
+      "desc": "Taze yaban mersini parçacıkları içeren yumuşacık kek.",
+      "img": "images/blueberry-cake-1779723152352-square.jpg",
+      "imgWide": "images/blueberry-cake-1779723152352-wide.jpg",
+      "tags": [
+        "Meyveli",
+        "Yumuşak"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Roll Kruvasan",
+      "price": "290₺",
+      "desc": "New York trendi, yuvarlak formlu ve bol çikolata dolgulu kruvasan.",
+      "img": "images/roll-kruvasan-1779723221608-square.jpg",
+      "imgWide": "images/roll-kruvasan-1779723221608-wide.jpg",
+      "tags": [
+        "Trend",
+        "Çıtır"
+      ],
+      "isActive": false
+    },
+    {
+      "name": "Küp Kruvasan",
+      "price": "290₺",
+      "desc": "Bol tereyağlı, kat kat hamuruyla içi özel krema dolgulu küp kruvasan.",
+      "img": "images/kup-kruvasan-1779723200226-square.jpg",
+      "imgWide": "images/kup-kruvasan-1779723200226-wide.jpg",
+      "tags": [
+        "Çıtır",
+        "Kremalı"
+      ],
+      "isActive": false
+    },
+    {
+      "name": "Cocostar",
+      "price": "285₺",
+      "desc": "Yoğun Hindistan cevizi dolgusu ve sütlü çikolata kaplaması.",
+      "img": "images/cocostar-1779723245703-square.jpg",
+      "imgWide": "images/cocostar-1779723245703-wide.jpg",
+      "tags": [
+        "Hindistan Cevizi",
+        "Tatlı"
+      ],
+      "isActive": true
+    }
+  ],
+  "Extralar": [
+    {
+      "name": "Şurup",
+      "price": "35₺",
+      "desc": "İçeceğinize ekstra lezzet katacak vanilya, karamel, muz, lavanta, çikolala, raspberry, fındık şurubu.",
+      "img": "images/surup-1779726461299-square.jpg",
+      "imgWide": "images/surup-1779726461299-wide.jpg",
+      "tags": [
+        "Tatlandırıcı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Bitkisel Süt",
+      "price": "35₺",
+      "desc": "Vegan ve laktozsuz diyetler için yulaf veya badem sütü alternatifi.",
+      "img": "images/bitkisel-sut-1779726576873-square.jpg",
+      "imgWide": "images/bitkisel-sut-1779726576873-wide.jpg",
+      "tags": [
+        "Vegan",
+        "Laktozsuz"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Espresso Shot",
+      "price": "45₺",
+      "desc": "Kahvenizin sertliğini artırmak için ekstra bir shot taze espresso.",
+      "img": "images/espresso-shot-1779727006386-square.jpg",
+      "imgWide": "images/espresso-shot-1779727006386-wide.jpg",
+      "tags": [
+        "Sertlik Arttırıcı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Premium Su",
+      "price": "25₺",
+      "desc": "Cam şişede doğal kaynak suyu.",
+      "img": "images/premium-su-1779726496359-square.jpg",
+      "imgWide": "images/premium-su-1779726496359-wide.jpg",
+      "tags": [
+        "Ferah"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Uludağ Soda",
+      "price": "65₺",
+      "desc": "",
+      "img": "images/uludag-soda-1780152246140-square.jpg",
+      "imgWide": "images/uludag-soda-1780152246140-wide.jpg",
+      "tags": [],
+      "isActive": true
+    },
+    {
+      "name": "Premium Soda",
+      "price": "65₺",
+      "desc": "Cam şişede doğal maden suyu.",
+      "img": "images/premium-soda-1779726517598-square.jpg",
+      "imgWide": "images/premium-soda-1779726517598-wide.jpg",
+      "tags": [
+        "Mineralli"
+      ],
+      "isActive": false
+    }
+  ],
+  "_Config": {
+    "dailySuggestion": {
+      "drinkName": "Mocha",
+      "foodName": "Fıstık Rüyası",
+      "discountAmount": 0,
+      "isActive": false
+    },
+    "slotConfig": [
+      {
+        "id": "sicak",
+        "label": "Sıcak",
+        "icon": "coffee",
+        "class": "coin-bronze",
+        "targetCategories": [
+          "Sıcak Kahveler"
+        ]
+      },
+      {
+        "id": "soguk",
+        "label": "Soğuk",
+        "icon": "snowflake",
+        "class": "coin-silver",
+        "targetCategories": [
+          "Soğuk Kahveler",
+          "Soğuk Special"
+        ]
+      },
+      {
+        "id": "tatli",
+        "label": "Tatlı",
+        "icon": "cake-slice",
+        "class": "coin-rose",
+        "targetCategories": [
+          "Pastalar"
+        ]
+      },
+      {
+        "id": "all",
+        "label": "Sürpriz",
+        "icon": "dices",
+        "class": "coin-gold",
+        "targetCategories": []
+      }
+    ]
+  }
+}
