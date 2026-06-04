@@ -968,10 +968,10 @@
   ],
   "_Config": {
     "dailySuggestion": {
-      "drinkName": "Mocha",
-      "foodName": "Fıstık Rüyası",
-      "discountAmount": 0,
-      "isActive": false
+      "drinkName": "Ice Latte",
+      "foodName": "Cream Puff",
+      "discountAmount": 385,
+      "isActive": true
     },
     "slotConfig": [
       {
