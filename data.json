@@ -719,6 +719,15 @@
   ],
   "Pastalar": [
     {
+      "name": "Brownie ",
+      "price": "285₺",
+      "desc": "",
+      "img": "images/brownie-1780594368106-square.jpg",
+      "imgWide": "images/brownie-1780594368106-wide.jpg",
+      "tags": [],
+      "isActive": true
+    },
+    {
       "name": "Fika Bowl Tabağı",
       "price": "320₺",
       "desc": "Tabanında kakaolu kek, üzerinde pastacı kreması, arasında çilek, muz, üzerine belçika çikolatası ve krep kırığı ile sevis edilir",
