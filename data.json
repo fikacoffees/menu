@@ -883,6 +883,15 @@
   ],
   "Extralar": [
     {
+      "name": "Churchill",
+      "price": "110₺",
+      "desc": "Bir klasik. Limon, tuz ve maden suyu",
+      "img": "images/churchill-1780593960073-square.jpg",
+      "imgWide": "images/churchill-1780593960073-wide.jpg",
+      "tags": [],
+      "isActive": true
+    },
+    {
       "name": "Şurup",
       "price": "35₺",
       "desc": "İçeceğinize ekstra lezzet katacak vanilya, karamel, muz, lavanta, çikolala, raspberry, fındık şurubu.",
