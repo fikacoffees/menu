@@ -970,7 +970,7 @@
     "dailySuggestion": {
       "drinkName": "Ice Latte",
       "foodName": "Cream Puff",
-      "discountAmount": 385,
+      "discountAmount": 40,
       "isActive": true
     },
     "slotConfig": [
