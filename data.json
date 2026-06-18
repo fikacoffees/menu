@@ -971,7 +971,7 @@
       "drinkName": "Ice Latte",
       "foodName": "Cream Puff",
       "discountAmount": 40,
-      "isActive": true
+      "isActive": false
     },
     "slotConfig": [
       {
