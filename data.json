@@ -439,6 +439,18 @@
   ],
   "Soğuk Special": [
     {
+      "name": "Aromalı Ice Matcha Latte",
+      "price": "200₺",
+      "desc": "Strawberry, vanilla, Muz-Lavanta seçenekleriyle sizinle",
+      "img": "images/aromali-ice-matcha-latte-1781794770792-square.jpg",
+      "imgWide": "images/aromali-ice-matcha-latte-1781794770792-wide.jpg",
+      "tags": [
+        "Dengeli",
+        "leziz"
+      ],
+      "isActive": true
+    },
+    {
       "name": "Ice FikaMint",
       "price": "175₺",
       "desc": "Fika'ya özel taze nane ve espressonun buzlu ferahlığı.",
