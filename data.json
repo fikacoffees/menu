@@ -921,15 +921,12 @@
       "isActive": true
     },
     {
-      "name": "Bitkisel Süt",
+      "name": "Süt",
       "price": "35₺",
-      "desc": "Vegan ve laktozsuz diyetler için yulaf veya badem sütü alternatifi.",
+      "desc": "",
       "img": "images/bitkisel-sut-1779726576873-square.jpg",
       "imgWide": "images/bitkisel-sut-1779726576873-wide.jpg",
-      "tags": [
-        "Vegan",
-        "Laktozsuz"
-      ],
+      "tags": [],
       "isActive": true
     },
     {
