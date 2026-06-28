@@ -573,6 +573,18 @@
   ],
   "Pastalar": [
     {
+      "name": "Fika Belgium Bolw",
+      "price": "325₺",
+      "desc": "Belçika çikolatasının eşsiz lezzeti, taze meyveler, çıtır dokular ve Fika dokunuşu bir arada..",
+      "img": "images/fika-belgium-bolw-1782653060301-square.jpg",
+      "imgWide": "images/fika-belgium-bolw-1782653060301-wide.jpg",
+      "tags": [
+        "Tatlı krizlerine sıradan bir çözüm değil",
+        "unutamayacağın bir deneyim sunuyoruz."
+      ],
+      "isActive": true
+    },
+    {
       "name": "Kruvasan",
       "price": "325₺",
       "desc": "Enfes pastacı kreması, meyve ve çikolatanın en çıtır buluşması",
