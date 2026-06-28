@@ -603,15 +603,6 @@
       "isActive": true
     },
     {
-      "name": "Fika Bowl Tabağı",
-      "price": "320₺",
-      "desc": "Tabanında kakaolu kek, üzerinde pastacı kreması, arasında çilek, muz, üzerine belçika çikolatası ve krep kırığı ile sevis edilir",
-      "img": "images/fika-bowl-tabagi-1780152007839-square.jpg",
-      "imgWide": "images/fika-bowl-tabagi-1780152007839-wide.jpg",
-      "tags": [],
-      "isActive": false
-    },
-    {
       "name": "Cream Puff",
       "price": "285₺",
       "desc": "Dışı çıtır choux hamuru, içinde çikolata ve pastacı kremasıyla kahvenizin lezzetli eşlikçisi",
