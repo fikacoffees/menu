@@ -439,6 +439,17 @@
   ],
   "Soğuk Special": [
     {
+      "name": "Cold Foam Latte",
+      "price": "190₺",
+      "desc": " Cold Foam Latte ile tanışın!\nSoğuk kahvenin üzerine eklenen ipeksi ve hafif köpük katmanı sayesinde her yudum daha yumuşak, daha kremamsı ve daha keyifli…",
+      "img": "images/cold-foam-latte-1782651256867-square.jpg",
+      "imgWide": "images/cold-foam-latte-1782651256867-wide.jpg",
+      "tags": [
+        "En yumuşak kahve deneyimi"
+      ],
+      "isActive": true
+    },
+    {
       "name": "Ube Latte",
       "price": "180₺",
       "desc": "Yumuşacık içimi,  Doğal ve büyüleyici mor rengi,  Hafif tatlı aromasıyla klasik latte deneyimine bambaşka bir dokunuş katıyor.",
