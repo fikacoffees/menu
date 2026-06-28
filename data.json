@@ -755,6 +755,15 @@
   ],
   "Extralar": [
     {
+      "name": "Uludağ Narlı Soda",
+      "price": "90₺",
+      "desc": "Nar meyve aromalı içecek",
+      "img": "images/uludag-narli-soda-1782651796311-square.jpg",
+      "imgWide": "images/uludag-narli-soda-1782651796311-wide.jpg",
+      "tags": [],
+      "isActive": true
+    },
+    {
       "name": "Churchill",
       "price": "110₺",
       "desc": "Bir klasik. Limon, tuz ve maden suyu",
