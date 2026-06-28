@@ -439,6 +439,17 @@
   ],
   "Soğuk Special": [
     {
+      "name": "Ube Matcha Latte",
+      "price": "180₺",
+      "desc": "Ube’nin hafif vanilyamsı, tatlı dokunuşu; matchanın kendine has ferahlığıyla birleşerek hem göze hem damaklara hitap eden bambaşka bir deneyim",
+      "img": "images/ube-matcha-latte-1782650696684-square.jpg",
+      "imgWide": "images/ube-matcha-latte-1782650696684-wide.jpg",
+      "tags": [
+        "Farklı tatlar keşfetmeyi sevenler için"
+      ],
+      "isActive": true
+    },
+    {
       "name": "Kuzu Kulağı Kokteyl ",
       "price": "200₺",
       "desc": "Ekşi mi yoksa tatlı mı ? Sen karar ver :)",
