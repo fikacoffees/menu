@@ -439,6 +439,17 @@
   ],
   "Soğuk Special": [
     {
+      "name": "Ube Latte",
+      "price": "180₺",
+      "desc": "Yumuşacık içimi,  Doğal ve büyüleyici mor rengi,  Hafif tatlı aromasıyla klasik latte deneyimine bambaşka bir dokunuş katıyor.",
+      "img": "images/ube-latte-1782651016582-square.jpg",
+      "imgWide": "images/ube-latte-1782651016582-wide.jpg",
+      "tags": [
+        "Purple Latte :)"
+      ],
+      "isActive": true
+    },
+    {
       "name": "Kuzu Kulağı Kokteyl ",
       "price": "200₺",
       "desc": "Ekşi mi yoksa tatlı mı ? Sen karar ver :)",
