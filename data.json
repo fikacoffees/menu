@@ -439,6 +439,18 @@
   ],
   "Soğuk Special": [
     {
+      "name": "Milkshake",
+      "price": "180₺",
+      "desc": "Dondurma ile hazırlanan nefis lezzet",
+      "img": "images/milkshake-1782650378232-square.jpg",
+      "imgWide": "images/milkshake-1782650378232-wide.jpg",
+      "tags": [
+        "Katkısız",
+        "orijinal"
+      ],
+      "isActive": true
+    },
+    {
       "name": "Kuzu Kulağı Kokteyl ",
       "price": "200₺",
       "desc": "Ekşi mi yoksa tatlı mı ? Sen karar ver :)",
