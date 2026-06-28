@@ -439,6 +439,17 @@
   ],
   "Soğuk Special": [
     {
+      "name": "Kuzu Kulağı Kokteyl ",
+      "price": "200₺",
+      "desc": "Ekşi mi yoksa tatlı mı ? Sen karar ver :)",
+      "img": "images/kuzu-kulagi-kokteyl-1782650253277-square.jpg",
+      "imgWide": "images/kuzu-kulagi-kokteyl-1782650253277-wide.jpg",
+      "tags": [
+        "Ferahlatıcı kokteyl"
+      ],
+      "isActive": true
+    },
+    {
       "name": "Aromalı Ice Matcha Latte",
       "price": "200₺",
       "desc": "Strawberry, vanilla, Muz-Lavanta seçenekleriyle sizinle",
