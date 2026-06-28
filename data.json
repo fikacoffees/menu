@@ -755,6 +755,18 @@
   ],
   "Extralar": [
     {
+      "name": "Çikolata ",
+      "price": "30₺",
+      "desc": "Pasta siparişlerinize extra lezzet katın",
+      "img": "images/cikolata-1782652386886-square.jpg",
+      "imgWide": "images/cikolata-1782652386886-wide.jpg",
+      "tags": [
+        "Belgium Chocolate",
+        "Premium Lezzet"
+      ],
+      "isActive": true
+    },
+    {
       "name": "Churchill",
       "price": "110₺",
       "desc": "Bir klasik. Limon, tuz ve maden suyu",
