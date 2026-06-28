@@ -437,220 +437,6 @@
       "isActive": true
     }
   ],
-  "Soğuk Special": [
-    {
-      "name": "Cold Foam Latte",
-      "price": "190₺",
-      "desc": " Cold Foam Latte ile tanışın!\nSoğuk kahvenin üzerine eklenen ipeksi ve hafif köpük katmanı sayesinde her yudum daha yumuşak, daha kremamsı ve daha keyifli…",
-      "img": "images/cold-foam-latte-1782651256867-square.jpg",
-      "imgWide": "images/cold-foam-latte-1782651256867-wide.jpg",
-      "tags": [
-        "En yumuşak kahve deneyimi"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Ube Latte",
-      "price": "180₺",
-      "desc": "Yumuşacık içimi,  Doğal ve büyüleyici mor rengi,  Hafif tatlı aromasıyla klasik latte deneyimine bambaşka bir dokunuş katıyor.",
-      "img": "images/ube-latte-1782651016582-square.jpg",
-      "imgWide": "images/ube-latte-1782651016582-wide.jpg",
-      "tags": [
-        "Purple Latte :)"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Kuzu Kulağı Kokteyl ",
-      "price": "200₺",
-      "desc": "Ekşi mi yoksa tatlı mı ? Sen karar ver :)",
-      "img": "images/kuzu-kulagi-kokteyl-1782650253277-square.jpg",
-      "imgWide": "images/kuzu-kulagi-kokteyl-1782650253277-wide.jpg",
-      "tags": [
-        "Ferahlatıcı kokteyl"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Aromalı Ice Matcha Latte",
-      "price": "200₺",
-      "desc": "Strawberry, vanilla, Muz-Lavanta seçenekleriyle sizinle",
-      "img": "images/aromali-ice-matcha-latte-1781794770792-square.jpg",
-      "imgWide": "images/aromali-ice-matcha-latte-1781794770792-wide.jpg",
-      "tags": [
-        "Dengeli",
-        "leziz"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Ube Matcha Latte",
-      "price": "180₺",
-      "desc": "Ube’nin hafif vanilyamsı, tatlı dokunuşu; matchanın kendine has ferahlığıyla birleşerek hem göze hem damaklara hitap eden bambaşka bir deneyim",
-      "img": "images/ube-matcha-latte-1782650696684-square.jpg",
-      "imgWide": "images/ube-matcha-latte-1782650696684-wide.jpg",
-      "tags": [
-        "Farklı tatlar keşfetmeyi sevenler için"
-      ],
-      "isActive": false
-    },
-    {
-      "name": "Ice Matcha Latte",
-      "price": "185₺",
-      "desc": "Buzlu süt ve premium Japon matcha çayının ferahlatıcı dengesi. ",
-      "img": "images/ice-matcha-latte-1779722067704-square.jpg",
-      "imgWide": "images/ice-matcha-latte-1779722067704-wide.jpg",
-      "tags": [
-        "Sağlıklı",
-        "Yeşil Çay"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Milkshake",
-      "price": "180₺",
-      "desc": "Dondurma ile hazırlanan nefis lezzet..\nÇilek, çikolata, karadut seçenekleri ile",
-      "img": "images/milkshake-1782650378232-square.jpg",
-      "imgWide": "images/milkshake-1782650378232-wide.jpg",
-      "tags": [
-        "Katkısız",
-        "orijinal"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Ice FikaMint",
-      "price": "175₺",
-      "desc": "Fika'ya özel taze nane ve espressonun buzlu ferahlığı.",
-      "img": "images/ice-fikamint-1780150694660-square.jpg",
-      "imgWide": "images/ice-fikamint-1780150694660-wide.jpg",
-      "tags": [
-        "Ferahlatıcı",
-        "İmza"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Ice Fındık Çikolata Latte",
-      "price": "175₺",
-      "desc": "Buzlu süt, çikolata ve fındığın eşsiz yaz lezzeti.",
-      "img": "images/ice-findik-ciko-1779721822231-square.jpg",
-      "imgWide": "images/ice-findik-ciko-1779721822231-wide.jpg",
-      "tags": [
-        "Tatlı",
-        "Soğuk"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Ice ChocolateBerry Latte",
-      "price": "175₺",
-      "desc": "Raspberry ve çikolata notalarının buz gibi espresso ile buluşması.",
-      "img": "images/ice-chocoberry-1779721840604-square.jpg",
-      "imgWide": "images/ice-chocoberry-1779721840604-wide.jpg",
-      "tags": [
-        "Meyveli",
-        "Buzlu"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Ice Pumpkin Spice Latte",
-      "price": "175₺",
-      "desc": "Bal kabağı baharatlarının serinletici yaz versiyonu.",
-      "img": "images/ice-pumpkin-spice-1779721865245-square.jpg",
-      "imgWide": "images/ice-pumpkin-spice-1779721865245-wide.jpg",
-      "tags": [
-        "Aromalı",
-        "Soğuk"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Ice Spanish Latte",
-      "price": "175₺",
-      "desc": "Yoğunlaştırılmış süt ve espresso'nun buzlu uyumu.",
-      "img": "images/ice-spanish-latte-1779721888084-square.jpg",
-      "imgWide": "images/ice-spanish-latte-1779721888084-wide.jpg",
-      "tags": [
-        "Kremamsı",
-        "Tatlı"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Berryz",
-      "price": "175₺",
-      "desc": "Hibiscus ve Raspberry özleriyle hazırlanan serinletici lezzet",
-      "img": "images/berryz-1779721917178-square.jpg",
-      "imgWide": "images/berryz-1779721917178-wide.jpg",
-      "tags": [
-        "Kahvesiz",
-        "Meyveli"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Orange Mango",
-      "price": "175₺",
-      "desc": "Portakal ve mangonun tropikal ve ferah buzlu karışımı.",
-      "img": "images/orange-mango-1779721941625-square.jpg",
-      "imgWide": "images/orange-mango-1779721941625-wide.jpg",
-      "tags": [
-        "Tropikal",
-        "Ferah"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Cool Lime",
-      "price": "175₺",
-      "desc": "Misket limonu ve taze nane özleriyle sarsıcı ferahlık.",
-      "img": "images/cool-lime-1779721968682-square.jpg",
-      "imgWide": "images/cool-lime-1779721968682-wide.jpg",
-      "tags": [
-        "Çok Ferah",
-        "Kahvesiz"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Blues",
-      "price": "175₺",
-      "desc": "Mavi portakal ve özel şuruplarla hazırlanan bir serinlik.",
-      "img": "images/blues-1779721991801-square.jpg",
-      "imgWide": "images/blues-1779721991801-wide.jpg",
-      "tags": [
-        "Özel",
-        "Meyveli"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "BerryLime",
-      "price": "175₺",
-      "desc": "Misket limonu ferahlığı, hibiscus ve Raspberry’nin mükemmel uyumu.",
-      "img": "images/berrylime-1779722019175-square.jpg",
-      "imgWide": "images/berrylime-1779722019175-wide.jpg",
-      "tags": [
-        "Ekşi",
-        "Tatlı"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Black Berryz",
-      "price": "175₺",
-      "desc": "Böğürtlenin yoğun tadını hissedeceğiniz buz gibi special.",
-      "img": "images/black-berryz-1779722044884-square.jpg",
-      "imgWide": "images/black-berryz-1779722044884-wide.jpg",
-      "tags": [
-        "Böğürtlen",
-        "Yoğun"
-      ],
-      "isActive": true
-    }
-  ],
   "Bitki Çayları": [
     {
       "name": "Cold 911",
@@ -1064,7 +850,7 @@
         "class": "coin-silver",
         "targetCategories": [
           "Soğuk Kahveler",
-          "Soğuk Special"
+          "Soğuk Special İçecekler"
         ]
       },
       {
@@ -1084,5 +870,219 @@
         "targetCategories": []
       }
     ]
-  }
+  },
+  "Soğuk Special İçecekler": [
+    {
+      "name": "Cold Foam Latte",
+      "price": "190₺",
+      "desc": " Cold Foam Latte ile tanışın!\nSoğuk kahvenin üzerine eklenen ipeksi ve hafif köpük katmanı sayesinde her yudum daha yumuşak, daha kremamsı ve daha keyifli…",
+      "img": "images/cold-foam-latte-1782651256867-square.jpg",
+      "imgWide": "images/cold-foam-latte-1782651256867-wide.jpg",
+      "tags": [
+        "En yumuşak kahve deneyimi"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ube Latte",
+      "price": "180₺",
+      "desc": "Yumuşacık içimi,  Doğal ve büyüleyici mor rengi,  Hafif tatlı aromasıyla klasik latte deneyimine bambaşka bir dokunuş katıyor.",
+      "img": "images/ube-latte-1782651016582-square.jpg",
+      "imgWide": "images/ube-latte-1782651016582-wide.jpg",
+      "tags": [
+        "Purple Latte :)"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Kuzu Kulağı Kokteyl ",
+      "price": "200₺",
+      "desc": "Ekşi mi yoksa tatlı mı ? Sen karar ver :)",
+      "img": "images/kuzu-kulagi-kokteyl-1782650253277-square.jpg",
+      "imgWide": "images/kuzu-kulagi-kokteyl-1782650253277-wide.jpg",
+      "tags": [
+        "Ferahlatıcı kokteyl"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Aromalı Ice Matcha Latte",
+      "price": "200₺",
+      "desc": "Strawberry, vanilla, Muz-Lavanta seçenekleriyle sizinle",
+      "img": "images/aromali-ice-matcha-latte-1781794770792-square.jpg",
+      "imgWide": "images/aromali-ice-matcha-latte-1781794770792-wide.jpg",
+      "tags": [
+        "Dengeli",
+        "leziz"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ube Matcha Latte",
+      "price": "180₺",
+      "desc": "Ube’nin hafif vanilyamsı, tatlı dokunuşu; matchanın kendine has ferahlığıyla birleşerek hem göze hem damaklara hitap eden bambaşka bir deneyim",
+      "img": "images/ube-matcha-latte-1782650696684-square.jpg",
+      "imgWide": "images/ube-matcha-latte-1782650696684-wide.jpg",
+      "tags": [
+        "Farklı tatlar keşfetmeyi sevenler için"
+      ],
+      "isActive": false
+    },
+    {
+      "name": "Ice Matcha Latte",
+      "price": "185₺",
+      "desc": "Buzlu süt ve premium Japon matcha çayının ferahlatıcı dengesi. ",
+      "img": "images/ice-matcha-latte-1779722067704-square.jpg",
+      "imgWide": "images/ice-matcha-latte-1779722067704-wide.jpg",
+      "tags": [
+        "Sağlıklı",
+        "Yeşil Çay"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Milkshake",
+      "price": "180₺",
+      "desc": "Dondurma ile hazırlanan nefis lezzet..\nÇilek, çikolata, karadut seçenekleri ile",
+      "img": "images/milkshake-1782650378232-square.jpg",
+      "imgWide": "images/milkshake-1782650378232-wide.jpg",
+      "tags": [
+        "Katkısız",
+        "orijinal"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ice FikaMint",
+      "price": "175₺",
+      "desc": "Fika'ya özel taze nane ve espressonun buzlu ferahlığı.",
+      "img": "images/ice-fikamint-1780150694660-square.jpg",
+      "imgWide": "images/ice-fikamint-1780150694660-wide.jpg",
+      "tags": [
+        "Ferahlatıcı",
+        "İmza"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ice Fındık Çikolata Latte",
+      "price": "175₺",
+      "desc": "Buzlu süt, çikolata ve fındığın eşsiz yaz lezzeti.",
+      "img": "images/ice-findik-ciko-1779721822231-square.jpg",
+      "imgWide": "images/ice-findik-ciko-1779721822231-wide.jpg",
+      "tags": [
+        "Tatlı",
+        "Soğuk"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ice ChocolateBerry Latte",
+      "price": "175₺",
+      "desc": "Raspberry ve çikolata notalarının buz gibi espresso ile buluşması.",
+      "img": "images/ice-chocoberry-1779721840604-square.jpg",
+      "imgWide": "images/ice-chocoberry-1779721840604-wide.jpg",
+      "tags": [
+        "Meyveli",
+        "Buzlu"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ice Pumpkin Spice Latte",
+      "price": "175₺",
+      "desc": "Bal kabağı baharatlarının serinletici yaz versiyonu.",
+      "img": "images/ice-pumpkin-spice-1779721865245-square.jpg",
+      "imgWide": "images/ice-pumpkin-spice-1779721865245-wide.jpg",
+      "tags": [
+        "Aromalı",
+        "Soğuk"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ice Spanish Latte",
+      "price": "175₺",
+      "desc": "Yoğunlaştırılmış süt ve espresso'nun buzlu uyumu.",
+      "img": "images/ice-spanish-latte-1779721888084-square.jpg",
+      "imgWide": "images/ice-spanish-latte-1779721888084-wide.jpg",
+      "tags": [
+        "Kremamsı",
+        "Tatlı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Berryz",
+      "price": "175₺",
+      "desc": "Hibiscus ve Raspberry özleriyle hazırlanan serinletici lezzet",
+      "img": "images/berryz-1779721917178-square.jpg",
+      "imgWide": "images/berryz-1779721917178-wide.jpg",
+      "tags": [
+        "Kahvesiz",
+        "Meyveli"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Orange Mango",
+      "price": "175₺",
+      "desc": "Portakal ve mangonun tropikal ve ferah buzlu karışımı.",
+      "img": "images/orange-mango-1779721941625-square.jpg",
+      "imgWide": "images/orange-mango-1779721941625-wide.jpg",
+      "tags": [
+        "Tropikal",
+        "Ferah"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Cool Lime",
+      "price": "175₺",
+      "desc": "Misket limonu ve taze nane özleriyle sarsıcı ferahlık.",
+      "img": "images/cool-lime-1779721968682-square.jpg",
+      "imgWide": "images/cool-lime-1779721968682-wide.jpg",
+      "tags": [
+        "Çok Ferah",
+        "Kahvesiz"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Blues",
+      "price": "175₺",
+      "desc": "Mavi portakal ve özel şuruplarla hazırlanan bir serinlik.",
+      "img": "images/blues-1779721991801-square.jpg",
+      "imgWide": "images/blues-1779721991801-wide.jpg",
+      "tags": [
+        "Özel",
+        "Meyveli"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "BerryLime",
+      "price": "175₺",
+      "desc": "Misket limonu ferahlığı, hibiscus ve Raspberry’nin mükemmel uyumu.",
+      "img": "images/berrylime-1779722019175-square.jpg",
+      "imgWide": "images/berrylime-1779722019175-wide.jpg",
+      "tags": [
+        "Ekşi",
+        "Tatlı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Black Berryz",
+      "price": "175₺",
+      "desc": "Böğürtlenin yoğun tadını hissedeceğiniz buz gibi special.",
+      "img": "images/black-berryz-1779722044884-square.jpg",
+      "imgWide": "images/black-berryz-1779722044884-wide.jpg",
+      "tags": [
+        "Böğürtlen",
+        "Yoğun"
+      ],
+      "isActive": true
+    }
+  ]
 }
