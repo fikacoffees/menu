@@ -758,15 +758,6 @@
   ],
   "Extralar": [
     {
-      "name": "Bitkisel Süt ",
-      "price": "35₺",
-      "desc": "Yulaf Sütü",
-      "img": "images/bitkisel-sut-1783602980261-square.jpg",
-      "imgWide": "images/bitkisel-sut-1783602980261-wide.jpg",
-      "tags": [],
-      "isActive": true
-    },
-    {
       "name": "Churchill",
       "price": "110₺",
       "desc": "Bir klasik. Limon, tuz ve maden suyu",
@@ -792,6 +783,15 @@
       "desc": "",
       "img": "images/bitkisel-sut-1779726576873-square.jpg",
       "imgWide": "images/bitkisel-sut-1779726576873-wide.jpg",
+      "tags": [],
+      "isActive": true
+    },
+    {
+      "name": "Bitkisel Süt ",
+      "price": "35₺",
+      "desc": "Yulaf Sütü",
+      "img": "images/bitkisel-sut-1783602980261-square.jpg",
+      "imgWide": "images/bitkisel-sut-1783602980261-wide.jpg",
       "tags": [],
       "isActive": true
     },
