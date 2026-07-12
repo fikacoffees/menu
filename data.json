@@ -573,15 +573,6 @@
   ],
   "Pastalar": [
     {
-      "name": "Brownie ",
-      "price": "285₺",
-      "desc": "",
-      "img": "images/brownie-1780594368106-square.jpg",
-      "imgWide": "images/brownie-1780594368106-wide.jpg",
-      "tags": [],
-      "isActive": true
-    },
-    {
       "name": "Fika Belgium Bowl",
       "price": "350₺",
       "desc": "Belçika çikolatasının eşsiz lezzeti, taze meyveler, çıtır dokular ve Fika dokunuşu bir arada..",
@@ -591,6 +582,15 @@
         "Tatlı krizlerine sıradan bir çözüm değil",
         "unutamayacağın bir deneyim sunuyoruz."
       ],
+      "isActive": true
+    },
+    {
+      "name": "Brownie ",
+      "price": "285₺",
+      "desc": "",
+      "img": "images/brownie-1780594368106-square.jpg",
+      "imgWide": "images/brownie-1780594368106-wide.jpg",
+      "tags": [],
       "isActive": true
     },
     {
