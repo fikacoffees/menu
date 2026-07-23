@@ -195,6 +195,17 @@
   ],
   "Soğuk Kahveler": [
     {
+      "name": "Ice Vanilla Latte",
+      "price": "175₺",
+      "desc": "",
+      "img": "images/ice-vanilla-latte-1784814563612-square.jpg",
+      "imgWide": "images/ice-vanilla-latte-1784814563612-wide.jpg",
+      "tags": [
+        "Vanilla ve espresso buluşması"
+      ],
+      "isActive": true
+    },
+    {
       "name": "Ice Latte",
       "price": "160₺",
       "desc": "Buzlu sütün taze çekilmiş espresso ile ferahlatıcı buluşması.",
