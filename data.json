@@ -195,17 +195,6 @@
   ],
   "Soğuk Kahveler": [
     {
-      "name": "Ice Caramel Latte",
-      "price": "175₺",
-      "desc": "",
-      "img": "images/ice-caramel-latte-1784814369528-square.jpg",
-      "imgWide": "images/ice-caramel-latte-1784814369528-wide.jpg",
-      "tags": [
-        "Tatlı bir uyum.."
-      ],
-      "isActive": true
-    },
-    {
       "name": "Ice Latte",
       "price": "160₺",
       "desc": "Buzlu sütün taze çekilmiş espresso ile ferahlatıcı buluşması.",
@@ -226,6 +215,17 @@
       "tags": [
         "Soğuk",
         "Çikolatalı"
+      ],
+      "isActive": true
+    },
+    {
+      "name": "Ice Caramel Latte",
+      "price": "175₺",
+      "desc": "",
+      "img": "images/ice-caramel-latte-1784814369528-square.jpg",
+      "imgWide": "images/ice-caramel-latte-1784814369528-wide.jpg",
+      "tags": [
+        "Tatlı bir uyum.."
       ],
       "isActive": true
     },
