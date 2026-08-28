@@ -195,6 +195,18 @@
   ],
   "Soğuk Kahveler": [
     {
+      "name": "Ice Pumpkin Spice Latte",
+      "price": "185₺",
+      "desc": "Bal kabağı baharatlarının serinletici yaz versiyonu.",
+      "img": "images/ice-pumpkin-spice-1779721865245-square.jpg",
+      "imgWide": "images/ice-pumpkin-spice-1779721865245-wide.jpg",
+      "tags": [
+        "Aromalı",
+        "Soğuk"
+      ],
+      "isActive": true
+    },
+    {
       "name": "Ice ChocolateBerry Latte",
       "price": "190₺",
       "desc": "Raspberry ve çikolata notalarının buz gibi espresso ile buluşması.",
@@ -1058,18 +1070,6 @@
       "tags": [
         "Ferahlatıcı",
         "İmza"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Ice Pumpkin Spice Latte",
-      "price": "185₺",
-      "desc": "Bal kabağı baharatlarının serinletici yaz versiyonu.",
-      "img": "images/ice-pumpkin-spice-1779721865245-square.jpg",
-      "imgWide": "images/ice-pumpkin-spice-1779721865245-wide.jpg",
-      "tags": [
-        "Aromalı",
-        "Soğuk"
       ],
       "isActive": true
     },
