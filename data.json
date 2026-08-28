@@ -195,6 +195,18 @@
   ],
   "Soğuk Kahveler": [
     {
+      "name": "Ice Spanish Latte",
+      "price": "185₺",
+      "desc": "Yoğunlaştırılmış süt ve espresso'nun buzlu uyumu.",
+      "img": "images/ice-spanish-latte-1779721888084-square.jpg",
+      "imgWide": "images/ice-spanish-latte-1779721888084-wide.jpg",
+      "tags": [
+        "Kremamsı",
+        "Tatlı"
+      ],
+      "isActive": true
+    },
+    {
       "name": "Ice Pumpkin Spice Latte",
       "price": "185₺",
       "desc": "Bal kabağı baharatlarının serinletici yaz versiyonu.",
@@ -1070,18 +1082,6 @@
       "tags": [
         "Ferahlatıcı",
         "İmza"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Ice Spanish Latte",
-      "price": "185₺",
-      "desc": "Yoğunlaştırılmış süt ve espresso'nun buzlu uyumu.",
-      "img": "images/ice-spanish-latte-1779721888084-square.jpg",
-      "imgWide": "images/ice-spanish-latte-1779721888084-wide.jpg",
-      "tags": [
-        "Kremamsı",
-        "Tatlı"
       ],
       "isActive": true
     },
