@@ -595,6 +595,15 @@
   ],
   "Pastalar": [
     {
+      "name": "İncirli Tart",
+      "price": "290₺",
+      "desc": "İncir, tahin, ceviz ve nanenin birleşimiyle ortaya çıkan büyüleyici lezzet. Sezonluk servis edilir.",
+      "img": "images/incirli-tart-1787909981833-square.jpg",
+      "imgWide": "images/incirli-tart-1787909981833-wide.jpg",
+      "tags": [],
+      "isActive": true
+    },
+    {
       "name": "Fika Belgium Bowl",
       "price": "350₺",
       "desc": "Belçika çikolatasının eşsiz lezzeti, taze meyveler, çıtır dokular ve Fika dokunuşu bir arada..",
