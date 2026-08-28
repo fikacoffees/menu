@@ -195,6 +195,18 @@
   ],
   "Soğuk Kahveler": [
     {
+      "name": "Ice FikaMint",
+      "price": "185₺",
+      "desc": "Fika'ya özel taze nane ve espressonun buzlu ferahlığı.",
+      "img": "images/ice-fikamint-1780150694660-square.jpg",
+      "imgWide": "images/ice-fikamint-1780150694660-wide.jpg",
+      "tags": [
+        "Ferahlatıcı",
+        "İmza"
+      ],
+      "isActive": true
+    },
+    {
       "name": "Ice Spanish Latte",
       "price": "185₺",
       "desc": "Yoğunlaştırılmış süt ve espresso'nun buzlu uyumu.",
@@ -1070,18 +1082,6 @@
       "tags": [
         "Katkısız",
         "orijinal"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Ice FikaMint",
-      "price": "185₺",
-      "desc": "Fika'ya özel taze nane ve espressonun buzlu ferahlığı.",
-      "img": "images/ice-fikamint-1780150694660-square.jpg",
-      "imgWide": "images/ice-fikamint-1780150694660-wide.jpg",
-      "tags": [
-        "Ferahlatıcı",
-        "İmza"
       ],
       "isActive": true
     },
