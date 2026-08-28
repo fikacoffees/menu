@@ -595,6 +595,15 @@
   ],
   "Pastalar": [
     {
+      "name": "Vişneli Cheesecake",
+      "price": "290₺",
+      "desc": "Lezzetli bir klasik.",
+      "img": "images/visneli-cheesecake-1787910213712-square.jpg",
+      "imgWide": "images/visneli-cheesecake-1787910213712-wide.jpg",
+      "tags": [],
+      "isActive": true
+    },
+    {
       "name": "İncirli Tart",
       "price": "290₺",
       "desc": "İncir, tahin, ceviz ve nanenin birleşimiyle ortaya çıkan büyüleyici lezzet. Sezonluk servis edilir.",
