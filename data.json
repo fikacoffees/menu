@@ -195,6 +195,18 @@
   ],
   "Soğuk Kahveler": [
     {
+      "name": "Ice Fındık Çikolata Latte",
+      "price": "190₺",
+      "desc": "Buzlu süt, çikolata ve fındığın eşsiz yaz lezzeti.",
+      "img": "images/ice-findik-ciko-1779721822231-square.jpg",
+      "imgWide": "images/ice-findik-ciko-1779721822231-wide.jpg",
+      "tags": [
+        "Tatlı",
+        "Soğuk"
+      ],
+      "isActive": true
+    },
+    {
       "name": "Ice Latte",
       "price": "160₺",
       "desc": "Buzlu sütün taze çekilmiş espresso ile ferahlatıcı buluşması.",
@@ -1034,18 +1046,6 @@
       "tags": [
         "Ferahlatıcı",
         "İmza"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Ice Fındık Çikolata Latte",
-      "price": "190₺",
-      "desc": "Buzlu süt, çikolata ve fındığın eşsiz yaz lezzeti.",
-      "img": "images/ice-findik-ciko-1779721822231-square.jpg",
-      "imgWide": "images/ice-findik-ciko-1779721822231-wide.jpg",
-      "tags": [
-        "Tatlı",
-        "Soğuk"
       ],
       "isActive": true
     },
