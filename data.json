@@ -195,6 +195,18 @@
   ],
   "Soğuk Kahveler": [
     {
+      "name": "Ice ChocolateBerry Latte",
+      "price": "190₺",
+      "desc": "Raspberry ve çikolata notalarının buz gibi espresso ile buluşması.",
+      "img": "images/ice-chocoberry-1779721840604-square.jpg",
+      "imgWide": "images/ice-chocoberry-1779721840604-wide.jpg",
+      "tags": [
+        "Meyveli",
+        "Buzlu"
+      ],
+      "isActive": true
+    },
+    {
       "name": "Ice Fındık Çikolata Latte",
       "price": "190₺",
       "desc": "Buzlu süt, çikolata ve fındığın eşsiz yaz lezzeti.",
@@ -1046,18 +1058,6 @@
       "tags": [
         "Ferahlatıcı",
         "İmza"
-      ],
-      "isActive": true
-    },
-    {
-      "name": "Ice ChocolateBerry Latte",
-      "price": "190₺",
-      "desc": "Raspberry ve çikolata notalarının buz gibi espresso ile buluşması.",
-      "img": "images/ice-chocoberry-1779721840604-square.jpg",
-      "imgWide": "images/ice-chocoberry-1779721840604-wide.jpg",
-      "tags": [
-        "Meyveli",
-        "Buzlu"
       ],
       "isActive": true
     },
