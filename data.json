@@ -655,6 +655,15 @@
   ],
   "Pastalar": [
     {
+      "name": "Limonlu Cheesecake",
+      "price": "290₺",
+      "desc": "Eşsiz bir klasik.",
+      "img": "images/limonlu-cheesecake-1788022207752-square.jpg",
+      "imgWide": "images/limonlu-cheesecake-1788022207752-wide.jpg",
+      "tags": [],
+      "isActive": true
+    },
+    {
       "name": "Antepli Tart",
       "price": "290₺",
       "desc": "Kıtır tart hamurunun antep fıstığı ve böğütlen dolgusuyla enfes birleşimi.",
