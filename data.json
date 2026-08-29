@@ -655,6 +655,15 @@
   ],
   "Pastalar": [
     {
+      "name": "Antepli Tart",
+      "price": "290₺",
+      "desc": "Kıtır tart hamurunun antep fıstığı ve böğütlen dolgusuyla enfes birleşimi.",
+      "img": "images/antepli-tart-1788022151548-square.jpg",
+      "imgWide": "images/antepli-tart-1788022151548-wide.jpg",
+      "tags": [],
+      "isActive": true
+    },
+    {
       "name": "Vişneli Cheesecake",
       "price": "290₺",
       "desc": "Lezzetli bir klasik.",
